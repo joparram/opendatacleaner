@@ -28,7 +28,7 @@ import { AppRoutingModule } from './app-routing.module';
     SharedModule,
     ShellModule,
     HomeModule,
-    AppRoutingModule, // must be imported as the last module as it contains the fallback route
+    AppRoutingModule
   ],
   declarations: [AppComponent],
   providers: [],

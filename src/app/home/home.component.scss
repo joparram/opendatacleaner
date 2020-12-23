@@ -1,14 +1,47 @@
-.container {
-  text-align: center;
-  padding: 1em;
+@import "src/theme/theme-variables";
+
+// .container {
+//   text-align: center;
+//   // padding: 1em;
+// }
+
+// .logo {
+//   width: 150px;
+//   margin: 0 auto;
+// }
+
+// q {
+//   font-style: italic;
+//   quotes: "« " " »";
+// }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 0px 0px;
+  height: 100%;
+  width: 100%;
+  grid-template-areas:
+    "actions dataset dataset dataset dataset dataset dataset"
+    "actions dataset dataset dataset dataset dataset dataset"
+    "actions dataset dataset dataset dataset dataset dataset"
+    "actions dataset dataset dataset dataset dataset dataset"
+    "actions dataset dataset dataset dataset dataset dataset"
+    "actions sugestions sugestions sugestions sugestions sugestions sugestions";
+}
+.actions {
+  grid-area: actions;
+  background-color: lightgray;
+}
+.sugestions {
+  grid-area: sugestions;
+  background-color: lightyellow;
+}
+.dataset {
+  grid-area: dataset;
 }
 
-.logo {
-  width: 150px;
-  margin: 0 auto;
-}
-
-q {
-  font-style: italic;
-  quotes: "« " " »";
+.sugestions-actions > * {
+  margin-right: 16px;
 }
