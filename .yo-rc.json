@@ -1,0 +1,36 @@
+{
+  "generator-ngx-rocket": {
+    "version": "9.1.0",
+    "props": {
+      "location": "path",
+      "strict": false,
+      "skipInstall": false,
+      "skipQuickstart": false,
+      "initGit": true,
+      "usePrefix": true,
+      "appName": "odc frontend",
+      "target": [
+        "web"
+      ],
+      "pwa": true,
+      "ui": "material",
+      "layout": "simple",
+      "auth": false,
+      "lazy": true,
+      "angulartics": false,
+      "languages": [
+        "es-ES"
+      ],
+      "tools": [
+        "prettier",
+        "hads"
+      ],
+      "utility": [],
+      "deploy": "none",
+      "projectName": "odc-frontend",
+      "packageManager": "npm",
+      "mobile": [],
+      "desktop": []
+    }
+  }
+}
