@@ -1,0 +1,12 @@
+cargo==0.3
+distlib==0.3.1
+Flask==1.1.2
+Flask-Cors==3.0.9
+Flask-Jsonpify==1.5.0
+Flask-RESTful==0.3.8
+Flask-SQLAlchemy==2.4.4
+numpy==1.19.4
+pandas==1.2.0
+typing-extensions==3.7.4.3
+urllib3==1.26.2
+pyarrow==2.0.0
