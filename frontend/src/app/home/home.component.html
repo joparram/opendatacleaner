@@ -1,0 +1,43 @@
+<!-- <div class="container">
+  <mat-card>
+    <p>
+      <img class="logo" src="assets/ngx-rocket-logo.png" alt="angular logo" />
+    </p>
+    <mat-card-content>
+      <mat-card-title translate>Hello world !</mat-card-title>
+      <mat-card-subtitle>
+        <app-loader [isLoading]="isLoading" size="1.5"></app-loader>
+        <q [hidden]="isLoading">{{ quote }}</q>
+      </mat-card-subtitle>
+    </mat-card-content>
+  </mat-card>
+
+</div> -->
+<div class="grid-container">
+  <div class="actions">
+    <div></div>
+  </div>
+  <div class="sugestions">
+    <div style="display: flex; flex-direction: row;height: 100%; width: 100%;">
+      <div style="display: flex; flex-direction: column;height: 100%;justify-content: center; padding-left: 8px;">
+        <b>Sugerencias</b>
+      </div>
+      <div color="primary" style="display: flex; flex-direction: row;height: 100%;width: 100%;align-items: center; padding-left: 32px;" class="sugestions-actions">
+        <button mat-raised-button style="height: 40px; min-width: 172px;" color="accent">Fila: eliminar</button>
+        <button mat-raised-button style="height: 40px; min-width: 172px;" color="accent">Fila: rellenar</button>
+        <button mat-raised-button style="height: 40px; min-width: 172px;" color="accent">Columna: eliminar outliers</button>
+        <button mat-raised-button style="height: 40px; min-width: 172px;" color="accent">Columna: eliminar outliers</button>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div class="dataset">
+    <ag-grid-angular style="width: 100%; height: 100%" class="ag-theme-alpine"
+    [gridOptions]="gridOptions"
+    [columnDefs]="columnDefs"
+    (gridReady)="onGridReady($event)"
+    #grid></ag-grid-angular>
+  </div>
+</div>
