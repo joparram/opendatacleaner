@@ -18,26 +18,35 @@
     <div></div>
   </div>
   <div class="sugestions">
-    <div style="display: flex; flex-direction: row;height: 100%; width: 100%;">
-      <div style="display: flex; flex-direction: column;height: 100%;justify-content: center; padding-left: 8px;">
+    <div style="display: flex; flex-direction: row; height: 100%; width: 100%">
+      <div style="display: flex; flex-direction: column; height: 100%; justify-content: center; padding-left: 8px">
         <b>Sugerencias</b>
       </div>
-      <div color="primary" style="display: flex; flex-direction: row;height: 100%;width: 100%;align-items: center; padding-left: 32px;" class="sugestions-actions">
-        <button mat-raised-button style="height: 40px; min-width: 172px;" color="accent">Fila: eliminar</button>
-        <button mat-raised-button style="height: 40px; min-width: 172px;" color="accent">Fila: rellenar</button>
-        <button mat-raised-button style="height: 40px; min-width: 172px;" color="accent">Columna: eliminar outliers</button>
-        <button mat-raised-button style="height: 40px; min-width: 172px;" color="accent">Columna: eliminar outliers</button>
+      <div
+        color="primary"
+        style="display: flex; flex-direction: row; height: 100%; width: 100%; align-items: center; padding-left: 32px"
+        class="sugestions-actions"
+      >
+        <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">Fila: eliminar</button>
+        <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">Fila: rellenar</button>
+        <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">
+          Columna: eliminar outliers
+        </button>
+        <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">
+          Columna: eliminar outliers
+        </button>
       </div>
     </div>
-
-
   </div>
 
   <div class="dataset">
-    <ag-grid-angular style="width: 100%; height: 100%" class="ag-theme-alpine"
-    [gridOptions]="gridOptions"
-    [columnDefs]="columnDefs"
-    (gridReady)="onGridReady($event)"
-    #grid></ag-grid-angular>
+    <ag-grid-angular
+      style="width: 100%; height: 100%"
+      class="ag-theme-alpine"
+      [gridOptions]="gridOptions"
+      [columnDefs]="columnDefs"
+      (gridReady)="onGridReady($event)"
+      #grid
+    ></ag-grid-angular>
   </div>
 </div>
