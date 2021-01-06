@@ -5,28 +5,35 @@ from flask_restful import Resource, Api
 from app.components._components import Components
 from app.components._plugins import ImporterPlugins
 from app.error import Error
+from flask_jsonpify import jsonify
+from app.utils.encoders import dataclassToJson
 
 class ImporterController(Resource):
     def __init__(self):
         print("fin")
-
-    def post(self):
-        data = None
-        componentExists = False
+    # Obtiene la configuración del componente y sus plugins
+    def get(self): 
         components: Components = _v1._private.container[Components]
         importerPlugins: Components = _v1._private.container[ImporterPlugins]
-        pluginName = request.form.get('plugin')
+        component = next(x for x in components if x.name == componentName )
+        cj = dataclassToJson(component)
+        cp = dataclassToJson(importerPlugins)
+        cj["plugins"] = cp
+        return jsonify(cj)
+    # Método que ejecuta el componente o un plugin del componente
+    def post(self):
+        data = None
+        components: Components = _v1._private.container[Components]
+        plugins: Components = _v1._private.container[ImporterPlugins]
+        pluginName = request.args.get('plugin')
         if pluginName == None:
-            for component in components:
-                if component.name == componentName:
-                    componentExists = True
-                    data = _v1._private.container[component.handler_class](request)
+            component = next(x for x in components if x.name == componentName )
+            data = _v1._private.container[component.handler_class](request)
         else:
-            for plugins in importerPlugins:
-                if plugins.name == pluginName:
-                    componentExists = True
-                    data = _v1._private.container[plugins.handler_class](request)
-
-        if componentExists == False:
-            raise Error('El plugin {} no existe o no se ha instalado'.format(pluginName)) 
-        return data
+            plugin = None
+            try:
+                plugin = next(x for x in plugins if x.name == pluginName )
+            except:
+                raise Error('El plugin {} no existe o no se ha instalado'.format(pluginName)) 
+            data = _v1._private.container[plugin.handler_class](request)
+        return jsonify(data)

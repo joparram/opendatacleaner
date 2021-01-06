@@ -1,7 +1,7 @@
 $COMMIT=$(git rev-parse HEAD)
 $VERSION=$(cat VERSION)
 $FLASK_DEBUG=1
-$PYTHONUNBUFFERED=true
+$PYTHONUNBUFFERED="true"
 iex "docker build . --tag odc-backend:${VERSION}.${COMMIT}"
 try {
     iex "docker stop odc-backend"
