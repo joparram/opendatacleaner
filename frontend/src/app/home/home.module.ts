@@ -10,8 +10,15 @@ import { HomeComponent } from './home.component';
 import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
-  imports: [CommonModule, TranslateModule, SharedModule, FlexLayoutModule, MaterialModule, HomeRoutingModule,
-    AgGridModule.withComponents([])],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    SharedModule,
+    FlexLayoutModule,
+    MaterialModule,
+    HomeRoutingModule,
+    AgGridModule.withComponents([]),
+  ],
   declarations: [HomeComponent],
 })
 export class HomeModule {}

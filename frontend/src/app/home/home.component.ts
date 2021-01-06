@@ -9,7 +9,7 @@ import { QuoteService } from './quote.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss', ],
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
   quote: string | undefined;
@@ -20,13 +20,11 @@ export class HomeComponent implements OnInit {
   public info: string;
   @ViewChild('grid') grid: AgGridAngular;
 
-
   constructor(private quoteService: QuoteService) {
-
     this.columnDefs = [
       { headerName: 'One', field: 'one' },
       { headerName: 'Two', field: 'two' },
-      { headerName: 'Three', field: 'three' }
+      { headerName: 'Three', field: 'three' },
     ];
 
     this.gridOptions = {
@@ -37,30 +35,27 @@ export class HomeComponent implements OnInit {
       enableServerSideSorting: false,
       rowModelType: 'infinite',
       pagination: true,
-      paginationAutoPageSize: true
+      paginationAutoPageSize: true,
     };
-
   }
   private getRowData(startRow: number, endRow: number): Observable<any[]> {
     // This is acting as a service call that will return just the
     // data range that you're asking for.
     var rowdata = [];
     for (var i = startRow; i <= endRow; i++) {
-      rowdata.push({ one: "hello", two: "world", three: "Item " + i });
+      rowdata.push({ one: 'hello', two: 'world', three: 'Item ' + i });
     }
     return of(rowdata);
   }
 
   onGridReady(params: any) {
-    console.log("onGridReady");
+    console.log('onGridReady');
     var datasource = {
       getRows: (params: IGetRowsParams) => {
-        this.info = "Getting datasource rows, start: " + params.startRow + ", end: " + params.endRow;
+        this.info = 'Getting datasource rows, start: ' + params.startRow + ', end: ' + params.endRow;
 
-        this.getRowData(params.startRow, params.endRow)
-                  .subscribe(data => params.successCallback(data));
-
-      }
+        this.getRowData(params.startRow, params.endRow).subscribe((data) => params.successCallback(data));
+      },
     };
     params.api.setDatasource(datasource);
   }
@@ -77,6 +72,5 @@ export class HomeComponent implements OnInit {
       .subscribe((quote: string) => {
         this.quote = quote;
       });
-
   }
 }

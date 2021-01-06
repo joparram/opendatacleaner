@@ -14,6 +14,7 @@ from app.components._plugins import ImporterPlugins, ExporterPlugins, DatabaseEx
 from app.controllers.processor import Processor
 from app.controllers.importer import ImporterController
 from app.controllers.importer import ImporterController
+from app.controllers.components import ComponentesController
 from app.error import Error
 
 app = Flask(__name__)
@@ -22,13 +23,14 @@ api = Api(app)
 app.secret_key = 'super secret key'
 app.config['SESSION_TYPE'] = 'filesystem'
 CORS(app)
-# plugin_loader.load_plugins()
+plugin_loader.load_plugins()
 
 @app.route("/")
 def hello():
     return jsonify({'text':'Hello World!'})
 api.add_resource(Processor, '/processor')  # Route_1
 api.add_resource(ImporterController, '/importer')  # Route_1
+api.add_resource(ComponentesController, '/components')  # Route_1
 
 @app.errorhandler(Error)
 def handle_bad_request(error):

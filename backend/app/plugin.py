@@ -1,31 +1,36 @@
-import argparse
 from dataclasses import dataclass
+from app.action import Action
 from typing import Callable
+
 
 @dataclass
 class ExporterPlugin:
     name: str
     description: str
+    interfacename: str
+    actions: [Action]
     handler_class: Callable[..., Callable[[None], None]]
-    properties: [any]
 
 @dataclass
 class ImporterPlugin:
     name: str
     description: str
+    interfacename: str
+    actions: [Action]
     handler_class: Callable[..., Callable[[None], None]]
-    properties: [any]
 
 @dataclass
 class DatabaseExporterPlugin:
     name: str
     description: str
+    interfacename: str
+    actions: [Action]
     handler_class: Callable[..., Callable[[None], None]]
-    properties: [any]
 
 @dataclass
 class DatasetProcessorPlugin:
     name: str
     description: str
+    interfacename: str
+    actions: [Action]
     handler_class: Callable[..., Callable[[None], None]]
-    properties: [any]
