@@ -27,16 +27,23 @@
     "actions dataset dataset dataset dataset dataset dataset"
     "actions dataset dataset dataset dataset dataset dataset"
     "actions dataset dataset dataset dataset dataset dataset"
-    "actions dataset dataset dataset dataset dataset dataset"
+    "actions sugestions sugestions sugestions sugestions sugestions sugestions"
     "actions sugestions sugestions sugestions sugestions sugestions sugestions";
 }
 .actions {
   grid-area: actions;
-  background-color: lightgray;
+  background-color: white;
 }
+.action-list mat-list-item:hover {
+  cursor: pointer;
+  background-color: #cacaca;
+  user-select: none;
+}
+
 .sugestions {
   grid-area: sugestions;
-  background-color: lightyellow;
+  //background-color: lightyellow;
+  border-left: 1px lightgray solid;
 }
 .dataset {
   grid-area: dataset;
@@ -44,4 +51,14 @@
 
 .sugestions-actions > * {
   margin-right: 16px;
+}
+
+// mat tabs
+
+.mat-tab-group {
+}
+
+.ag-theme-alpine .ag-column-selected {
+  background-color: rgba(33, 150, 243, 0.3);
+  background-color: var(--ag-selected-row-background-color, rgba(33, 150, 243, 0.3));
 }
