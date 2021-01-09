@@ -7,9 +7,8 @@ RUN whoami && ls -l
 WORKDIR /app
 # expose angular port
 EXPOSE 4200
-COPY package.json /app/package.jso
 COPY . ./
-RUN npm install --production
+RUN npm install
 
 # Development start command
 CMD ["npm", "start"]
