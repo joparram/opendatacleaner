@@ -15,28 +15,51 @@
 </div> -->
 <div class="grid-container">
   <div class="actions">
-    <div></div>
+    <mat-list class="action-list">
+      <div mat-subheader>Funciones Fila</div>
+      <mat-list-item *ngFor="let folder of rowFunctions">
+        <mat-icon mat-list-icon>build_circle</mat-icon>
+        <div mat-line>{{ folder.name }}</div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <div mat-subheader>Funciones Columna</div>
+      <mat-list-item *ngFor="let note of columnFunctions">
+        <mat-icon mat-list-icon>build_circle</mat-icon>
+        <div mat-line>{{ note.name }}</div>
+      </mat-list-item>
+    </mat-list>
   </div>
   <div class="sugestions">
-    <div style="display: flex; flex-direction: row; height: 100%; width: 100%">
-      <div style="display: flex; flex-direction: column; height: 100%; justify-content: center; padding-left: 8px">
-        <b>Sugerencias</b>
-      </div>
-      <div
-        color="primary"
-        style="display: flex; flex-direction: row; height: 100%; width: 100%; align-items: center; padding-left: 32px"
-        class="sugestions-actions"
-      >
-        <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">Fila: eliminar</button>
-        <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">Fila: rellenar</button>
-        <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">
-          Columna: eliminar outliers
-        </button>
-        <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">
-          Columna: eliminar outliers
-        </button>
-      </div>
-    </div>
+    <mat-tab-group>
+      <mat-tab label="Análisis"> </mat-tab>
+      <mat-tab label="Sugerencias">
+        <div style="display: flex; flex-direction: row; height: 100%; width: 100%">
+          <div
+            color="primary"
+            style="
+              display: flex;
+              flex-direction: row;
+              height: 100%;
+              width: 100%;
+              align-items: center;
+              padding-left: 32px;
+            "
+            class="sugestions-actions"
+          >
+            <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">Fila: eliminar</button>
+            <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">Fila: rellenar</button>
+            <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">
+              Columna: eliminar outliers
+            </button>
+            <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">
+              Columna: eliminar outliers
+            </button>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Histórico"> Content 3 </mat-tab>
+      <mat-tab label="Resultados"> Content 3 </mat-tab>
+    </mat-tab-group>
   </div>
 
   <div class="dataset">
