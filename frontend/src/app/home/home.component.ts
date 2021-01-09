@@ -5,6 +5,8 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import { QuoteService } from './quote.service';
+import { ImportService } from '@app/@shared/services/import.service';
+import { MenuService } from '@app/@shared/services/menu.service';
 
 @Component({
   selector: 'app-home',
@@ -24,41 +26,27 @@ export class HomeComponent implements OnInit {
   selectedColumn: any;
   @ViewChild('grid') grid: AgGridAngular;
 
-  constructor(private quoteService: QuoteService) {
+  constructor(private quoteService: QuoteService, private importService: ImportService, private menuService: MenuService) {
+
+    this.menuService.menu$.subscribe(event => {
+        switch(event.action) {
+          case "import":
+            break;
+          default:
+            break;
+        }
+    });
+
     this.rowFunctions = [
       {
         name: 'Eliminar Fila',
         updated: 'Elimina una fila del dataset',
-      },
-      {
-        name: 'Eliminar Espacios',
-        updated: 'Resolver problema de espacios',
-      },
-      {
-        name: 'Rellenar propiedades',
-        updated: 'Calcular propiedades faltantes',
       },
     ];
     this.columnFunctions = [
       {
         name: 'Eliminar propiedad',
         updated: 'Elimina una columna',
-      },
-      {
-        name: 'Unir columnas',
-        updated: 'Une dos columnas',
-      },
-      {
-        name: 'Unificar formatos',
-        updated: 'pej. fechas',
-      },
-      {
-        name: 'Agrupar Propiedades',
-        updated: 'agrupa propiedades',
-      },
-      {
-        name: 'Detectar Outliers',
-        updated: 'detección de outliers',
       },
     ];
     this.columnDefs = [
