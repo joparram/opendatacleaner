@@ -1,6 +1,7 @@
 import { Action } from './action';
 
-export interface Plugin {
+export interface ActionPlugin {
+  id: string;
   description: string;
   handler_class: string;
   interfacename: string;

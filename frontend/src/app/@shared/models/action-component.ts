@@ -1,11 +1,12 @@
 import {Action} from "./action";
-import {Plugin} from "./plugin";
+import {ActionPlugin} from "./action-plugin";
 
-export interface Component {
+export interface ActionComponent {
+  id: string;
   description: string;
   handler_class: string;
   interfacename: string;
   name: string;
   actions: Action [];
-  plugins: Plugin [];
+  plugins: ActionPlugin [];
 }

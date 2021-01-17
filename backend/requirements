@@ -12,3 +12,4 @@ urllib3==1.26.2
 pyarrow==2.0.0
 requests==2.25.1
 dataclasses-json==0.5.2
+stringcase==1.2.0
