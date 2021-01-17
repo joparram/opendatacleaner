@@ -1,10 +1,17 @@
-import { Component, HostListener, Input, ViewChild, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, Input, ViewChild, OnInit, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { GridOptions, IDatasource, IGetRowsParams, ColDef } from 'ag-grid';
 import { AgGridAngular } from 'ag-grid-angular';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { of } from 'rxjs';
 import { QuoteService } from './quote.service';
+import { ImportService } from '@app/@shared/services/import.service';
+import { MenuService } from '@app/@shared/services/menu.service';
+import { DataService } from '@app/@shared/services/data.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ActionComponent } from '@app/@shared/models/action-component';
+import { ActionDialogComponent } from '@shared/components/component-dialog/action-dialog.component';
+import { PortalInjector } from '@angular/cdk/portal';
 
 @Component({
   selector: 'app-home',
@@ -22,21 +29,39 @@ export class HomeComponent implements OnInit {
   rowFunctions: any[];
   columnFunctions: any[];
   selectedColumn: any;
+  dialogRef: any;
+  minRow: number = 0;
+  maxRow: number = 100;
+  dataSubscription: Subscription = new Subscription();
+
   @ViewChild('grid') grid: AgGridAngular;
 
-  constructor(private quoteService: QuoteService) {
+  constructor(private quoteService: QuoteService, private importService: ImportService, private menuService: MenuService, private dialog: MatDialog, private ref: ChangeDetectorRef, private dataservice: DataService) {
+
+    this.menuService.menu$.subscribe(event => {
+        switch(event.action) {
+          case "import":
+            this.importService.get().subscribe((component: ActionComponent) => {
+              this.pruebaDialog(component)
+            })
+            break;
+          default:
+            break;
+        }
+    });
+    this.dataservice.columns$.subscribe((columns: any) => {
+      this.columnDefs = columns;
+    });
+    this.dataservice.data$.subscribe((data: any) => {
+      console.log(data)
+    });
+    this.dataservice.types$.subscribe((types: any) => {
+
+    });
     this.rowFunctions = [
       {
         name: 'Eliminar Fila',
         updated: 'Elimina una fila del dataset',
-      },
-      {
-        name: 'Eliminar Espacios',
-        updated: 'Resolver problema de espacios',
-      },
-      {
-        name: 'Rellenar propiedades',
-        updated: 'Calcular propiedades faltantes',
       },
     ];
     this.columnFunctions = [
@@ -44,33 +69,12 @@ export class HomeComponent implements OnInit {
         name: 'Eliminar propiedad',
         updated: 'Elimina una columna',
       },
-      {
-        name: 'Unir columnas',
-        updated: 'Une dos columnas',
-      },
-      {
-        name: 'Unificar formatos',
-        updated: 'pej. fechas',
-      },
-      {
-        name: 'Agrupar Propiedades',
-        updated: 'agrupa propiedades',
-      },
-      {
-        name: 'Detectar Outliers',
-        updated: 'detección de outliers',
-      },
-    ];
-    this.columnDefs = [
-      { headerName: 'One', field: 'one' },
-      { headerName: 'Two', field: 'two' },
-      { headerName: 'Three', field: 'three' },
     ];
 
     this.gridOptions = {
       rowSelection: 'single',
       cacheBlockSize: 100,
-      maxBlocksInCache: 2,
+      maxBlocksInCache: 1,
       enableServerSideFilter: false,
       enableServerSideSorting: false,
       rowModelType: 'infinite',
@@ -78,7 +82,7 @@ export class HomeComponent implements OnInit {
       paginationAutoPageSize: true,
       defaultColDef: {
         cellStyle: (params: any) => {
-          console.log(params.colDef);
+          // console.log(params.colDef);
           if (params.colDef === this.selectedColumn) {
             return { 'background-color': '#b7e4ff' };
           }
@@ -89,33 +93,41 @@ export class HomeComponent implements OnInit {
       },
     };
   }
-  // public onSelectionChanged (event: any) {
-  //   console.log(event);
-  // }
-  private getRowData(startRow: number, endRow: number): Observable<any[]> {
-    // This is acting as a service call that will return just the
-    // data range that you're asking for.
-    var rowdata = [];
-    for (var i = startRow; i <= endRow; i++) {
-      rowdata.push({ one: 'hello', two: 'world', three: 'Item ' + i });
-    }
-    return of(rowdata);
+
+  private pruebaDialog(component: ActionComponent) {
+    this.dialogRef = this.dialog.open(ActionDialogComponent, {
+      disableClose: false
+    });
+    this.dialogRef.componentInstance.component = component
+    this.dialogRef.afterClosed().subscribe((confirm: any) => {
+      if ( confirm )
+      {
+        this.importService.post(confirm, {startRow: this.minRow, endRow: this.maxRow}).subscribe((data: any) => this.dataservice.updateDataEvents(data));
+      }
+    });
   }
 
   onGridReady(params: any) {
-    console.log('onGridReady');
+    console.log("onGridReady")
     var datasource = {
       getRows: (params: IGetRowsParams) => {
+        this.dataSubscription.unsubscribe();
         this.info = 'Getting datasource rows, start: ' + params.startRow + ', end: ' + params.endRow;
-        console.log(this.info);
-        this.getRowData(params.startRow, params.endRow).subscribe((data) => params.successCallback(data));
+        console.log(this.info)
+        this.dataSubscription = this.dataservice.data$.subscribe((data: any) => {
+          this.rowData = data;
+          params.successCallback(this.rowData)
+          this.ref.detectChanges()
+        });
+        this.dataservice.get({startRow: params.startRow, endRow: params.endRow}).subscribe((data) => {
+          this.dataservice.updateDataEvents(data)
+        });
       },
     };
     params.api.setDatasource(datasource);
   }
   ngOnInit() {
     this.isLoading = true;
-
     this.quoteService
       .getRandomQuote({ category: 'dev' })
       .pipe(

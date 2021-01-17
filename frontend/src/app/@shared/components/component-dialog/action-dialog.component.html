@@ -1,0 +1,41 @@
+<h1 matDialogTitle>{{component.name}}</h1>
+<h4>Seleccionar plugin</h4>
+
+<mat-radio-group [(ngModel)]="plugin" (change)="onChanges()">
+  <mat-radio-button class="example-radio-button" value="none">
+    Ninguno
+  </mat-radio-button>
+  <mat-radio-button class="example-radio-button" *ngFor="let plugin of component.plugins" [value]="plugin">
+    {{plugin.name}}
+  </mat-radio-button>
+</mat-radio-group>
+
+<h4>Seleccionar acción</h4>
+
+<mat-radio-group  [(ngModel)]="action" (change)="onChanges()">
+  <mat-radio-button #actions class="example-radio-button" *ngFor="let action of getActions(); let i = index" [value]="action" [checked]="i === 0">
+    {{action.name}}
+  </mat-radio-button>
+</mat-radio-group>
+
+
+<form [formGroup]="parameters" *ngIf="action !== undefined">
+  <h4>Rellene formulario</h4>
+  <div *ngFor="let param of action.params">
+    <mat-label>{{ param?.name }}</mat-label>
+    <input *ngIf="param.kind === 'number'" [formControlName]="param?.name" type="text" [placeholder]="param.description"/>
+    <input *ngIf="param.kind === 'file'" [name]="param?.name" [formControlName]="param?.name"  #fileinput type="file" />
+    <input *ngIf="param.kind === 'text'" [formControlName]="param?.name"  type="text" [placeholder]="param.description">
+    <select *ngIf="param.kind === 'boolean'" [formControlName]="param?.name"  matNativeControl #fileInput>
+      <option value="true" selected>true</option>
+      <option value="false">false</option>
+    </select>
+  </div>
+
+</form>
+<!-- {confirm: true, plugin: plugin, action: action, parameters: parameters.getRawValue()} -->
+<div mat-dialog-actions>
+    <button mat-raised-button (click)="dialogRef.close(getFormData())">Confirmar</button>
+    <button mat-button (click)="dialogRef.close(false)">Cancelar</button>
+</div>
+

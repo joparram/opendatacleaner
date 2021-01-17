@@ -9,6 +9,5 @@ WORKDIR /app
 EXPOSE 4200
 COPY . ./
 RUN npm install
-
 # Development start command
 CMD ["npm", "start"]

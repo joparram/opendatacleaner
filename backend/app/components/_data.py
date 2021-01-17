@@ -14,10 +14,22 @@ import ssl
 from werkzeug.datastructures import FileStorage
 import requests
 from io import StringIO
+import stringcase
+import re
 
 class dataframeHandler:
+
+    @staticmethod
+    def fixHeaders(df):
+        columnsraw = list(df.columns)
+        columns = [re.sub('[^0-9a-zA-Z]+', '', i) for i in columnsraw]
+        columns = [stringcase.camelcase(i) for i in columns]
+        return columns
+
     @staticmethod
     def saveDataframe(df):
+        columns = dataframeHandler.fixHeaders(df)
+        df.columns = columns
         df.to_feather("cached")
 
     @staticmethod
@@ -28,3 +40,25 @@ class dataframeHandler:
     def getColumnsTypes():
         df = dataframeHandler.getDataframe()
         return df.dtypes.apply(lambda x: x.name).to_dict()
+
+    @staticmethod
+    def getColumnsNames():
+        df = dataframeHandler.getDataframe()
+        columnsraw = list(df.columns)
+        columns = []
+        for column in columnsraw:
+            columns.append(dict (headerName=column, field=column))
+        return columns
+
+    @staticmethod
+    def getAllData(pagination = {}):
+        df = dataframeHandler.getDataframe()
+        columnsraw = list(df.columns)
+        columns = []
+        data = df.to_dict('records')
+        for column in columnsraw:
+            columns.append(dict (headerName=column, field=column))
+        if "startRow" in pagination and "endRow" in pagination:
+            if pagination["startRow"] != None and pagination["endRow"] != None:
+                data = df.iloc[pagination["startRow"]:pagination["endRow"]].to_dict('records')
+        return dict (data=data, types=df.dtypes.apply(lambda x: x.name).to_dict(), columns=columns)

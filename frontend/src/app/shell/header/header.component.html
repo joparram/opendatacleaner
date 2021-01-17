@@ -22,17 +22,22 @@
     <mat-icon>more_vert</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
-    <button mat-menu-item>
+    <button mat-menu-item (click)="click({action: 'import'})">
       <mat-icon>south_west</mat-icon>
       <span>Importar</span>
     </button>
-    <button mat-menu-item disabled>
+    <button mat-menu-item (click)="click({action: 'export'})">
       <mat-icon>call_made</mat-icon>
       <span>Exportar</span>
     </button>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="click({action: 'close'})">
       <mat-icon>close</mat-icon>
       <span>Cerrar proyecto</span>
     </button>
+    <!-- <button (click)="fileInput.click()">
+      <mat-icon>close</mat-icon>
+      <span>Select</span>
+      <input #fileInput type="file" (change)="onFileInput($event)" style="display:none;" />
+    </button> -->
   </mat-menu>
 </mat-toolbar>

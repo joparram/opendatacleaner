@@ -10,16 +10,19 @@ from app.utils.encoders import dataclassToJson
 
 class ImporterController(Resource):
     def __init__(self):
-        print("fin")
+        print("__init__")
+
     # Obtiene la configuración del componente y sus plugins
     def get(self): 
         components: Components = _v1._private.container[Components]
-        importerPlugins: Components = _v1._private.container[ImporterPlugins]
+        importerPlugins: ImporterPlugins = _v1._private.container[ImporterPlugins]
         component = next(x for x in components if x.name == componentName )
         cj = dataclassToJson(component)
         cp = dataclassToJson(importerPlugins)
+        print(importerPlugins)
         cj["plugins"] = cp
         return jsonify(cj)
+
     # Método que ejecuta el componente o un plugin del componente
     def post(self):
         data = None
@@ -34,6 +37,7 @@ class ImporterController(Resource):
             try:
                 plugin = next(x for x in plugins if x.name == pluginName )
             except:
-                raise Error('El plugin {} no existe o no se ha instalado'.format(pluginName)) 
+                raise Error('El plugin {} no existe o no se ha instalado'.format(pluginName))
             data = _v1._private.container[plugin.handler_class](request)
         return jsonify(data)
+        

@@ -15,6 +15,7 @@ from app.controllers.processor import Processor
 from app.controllers.importer import ImporterController
 from app.controllers.importer import ImporterController
 from app.controllers.components import ComponentesController
+from app.controllers.data import DataController
 from app.error import Error
 
 app = Flask(__name__)
@@ -31,6 +32,7 @@ def hello():
 api.add_resource(Processor, '/processor')  # Route_1
 api.add_resource(ImporterController, '/importer')  # Route_1
 api.add_resource(ComponentesController, '/components')  # Route_1
+api.add_resource(DataController, '/data')  # Route_1
 
 @app.errorhandler(Error)
 def handle_bad_request(error):
