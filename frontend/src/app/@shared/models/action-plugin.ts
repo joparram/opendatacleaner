@@ -6,5 +6,5 @@ export interface ActionPlugin {
   handler_class: string;
   interfacename: string;
   name: string;
-  actions: Action [];
+  actions: Action[];
 }

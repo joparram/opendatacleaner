@@ -6,11 +6,10 @@ import { Pagination } from '../models/pagination';
 const baseURL = 'http://localhost:5000/importer';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ImportService {
-
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   get(): Observable<any> {
     return this.httpClient.get(baseURL);
@@ -34,7 +33,6 @@ export class ImportService {
       formData.append(name, value);
     }
 
-    return this.httpClient.post(baseURL, formData, { headers: headers, params: params});
+    return this.httpClient.post(baseURL, formData, { headers: headers, params: params });
   }
-
 }

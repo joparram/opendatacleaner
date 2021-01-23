@@ -13,3 +13,4 @@ pyarrow==2.0.0
 requests==2.25.1
 dataclasses-json==0.5.2
 stringcase==1.2.0
+simplejson==3.17.2

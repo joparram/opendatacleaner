@@ -1,41 +1,42 @@
-<h1 matDialogTitle>{{component.name}}</h1>
+<h1 matDialogTitle>{{ component.name }}</h1>
 <h4>Seleccionar plugin</h4>
 
 <mat-radio-group [(ngModel)]="plugin" (change)="detectPluginChanges()">
-  <mat-radio-button class="example-radio-button" value="none">
-    Ninguno
-  </mat-radio-button>
+  <mat-radio-button class="example-radio-button" value="none"> Ninguno </mat-radio-button>
   <mat-radio-button class="example-radio-button" *ngFor="let plugin of component.plugins" [value]="plugin">
-    {{plugin.name}}
+    {{ plugin.name }}
   </mat-radio-button>
 </mat-radio-group>
 
 <h4>Seleccionar acción</h4>
 
-<mat-radio-group  [(ngModel)]="action" (change)="detectActionChanges()">
-  <mat-radio-button #actions class="example-radio-button" *ngFor="let action of getActions(); let i = index" [value]="action" [checked]="i === 0">
-    {{action.name}}
+<mat-radio-group [(ngModel)]="action" (change)="detectActionChanges()">
+  <mat-radio-button
+    #actions
+    class="example-radio-button"
+    *ngFor="let action of getActions(); let i = index"
+    [value]="action"
+    [checked]="i === 0"
+  >
+    {{ action.name }}
   </mat-radio-button>
 </mat-radio-group>
-
 
 <form [formGroup]="parameters" *ngIf="action !== undefined">
   <h4>Rellene formulario</h4>
   <div *ngFor="let param of action.params">
     <mat-label>{{ param?.name }}</mat-label>
-    <input *ngIf="param.kind === 'number'" #fileInput type="text" [placeholder]="param.description"/>
+    <input *ngIf="param.kind === 'number'" #fileInput type="text" [placeholder]="param.description" />
     <input *ngIf="param.kind === 'file'" #fileInput type="file" />
-    <input *ngIf="param.kind === 'text'" type="text" [placeholder]="param.description">
+    <input *ngIf="param.kind === 'text'" type="text" [placeholder]="param.description" />
     <select *ngIf="param.kind === 'boolean'" matNativeControl #fileInput>
       <option value="valid" selected>Valid option</option>
       <option value="invalid">Invalid option</option>
     </select>
   </div>
-
 </form>
 
 <div mat-dialog-actions>
-    <button mat-raised-button (click)="dialogRef.close({confirm: true, data: plugin})">Confirmar</button>
-    <button mat-button (click)="dialogRef.close(false)">Cancelar</button>
+  <button mat-raised-button (click)="dialogRef.close({ confirm: true, data: plugin })">Confirmar</button>
+  <button mat-button (click)="dialogRef.close(false)">Cancelar</button>
 </div>
-

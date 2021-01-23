@@ -1,14 +1,13 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
-import {Pagination} from '../models/pagination'
-import {Data} from '../models/data'
+import { Pagination } from '../models/pagination';
+import { Data } from '../models/data';
 
 const baseURL = 'http://localhost:5000/data';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DataService {
   private datasource = new Subject<any>();
@@ -19,7 +18,7 @@ export class DataService {
   columns$ = this.columnssource.asObservable();
   types$ = this.typessource.asObservable();
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   updateDataEvents(e: any): void {
     this.datasource.next(e.data);
@@ -29,10 +28,10 @@ export class DataService {
 
   get(pagination: Pagination): Observable<Data> {
     const params = new HttpParams()
-    .set('startRow', JSON.stringify(pagination.startRow))
-    .set('endRow', JSON.stringify(pagination.endRow));
+      .set('startRow', JSON.stringify(pagination.startRow))
+      .set('endRow', JSON.stringify(pagination.endRow));
 
-    console.log(params.keys())
-    return this.httpClient.get<Data>(baseURL, {params: params});
+    console.log(params.keys());
+    return this.httpClient.get<Data>(baseURL, { params: params });
   }
 }

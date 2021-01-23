@@ -12,13 +12,11 @@ import { MenuService } from '@shared/services/menu.service';
 export class HeaderComponent implements OnInit {
   @Input() sidenav!: MatSidenav;
 
-  constructor(private titleService: Title, private menuService: MenuService) {
-
-  }
+  constructor(private titleService: Title, private menuService: MenuService) {}
 
   click(event: any) {
     this.menuService.updateMenuEvents(event);
-    console.log(event)
+    console.log(event);
   }
 
   ngOnInit() {}

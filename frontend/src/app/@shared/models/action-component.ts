@@ -1,5 +1,5 @@
-import {Action} from "./action";
-import {ActionPlugin} from "./action-plugin";
+import { Action } from './action';
+import { ActionPlugin } from './action-plugin';
 
 export interface ActionComponent {
   id: string;
@@ -7,6 +7,6 @@ export interface ActionComponent {
   handler_class: string;
   interfacename: string;
   name: string;
-  actions: Action [];
-  plugins: ActionPlugin [];
+  actions: Action[];
+  plugins: ActionPlugin[];
 }

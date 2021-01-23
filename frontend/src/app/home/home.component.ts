@@ -36,28 +36,32 @@ export class HomeComponent implements OnInit {
 
   @ViewChild('grid') grid: AgGridAngular;
 
-  constructor(private quoteService: QuoteService, private importService: ImportService, private menuService: MenuService, private dialog: MatDialog, private ref: ChangeDetectorRef, private dataservice: DataService) {
-
-    this.menuService.menu$.subscribe(event => {
-        switch(event.action) {
-          case "import":
-            this.importService.get().subscribe((component: ActionComponent) => {
-              this.pruebaDialog(component)
-            })
-            break;
-          default:
-            break;
-        }
+  constructor(
+    private quoteService: QuoteService,
+    private importService: ImportService,
+    private menuService: MenuService,
+    private dialog: MatDialog,
+    private ref: ChangeDetectorRef,
+    private dataservice: DataService
+  ) {
+    this.menuService.menu$.subscribe((event) => {
+      switch (event.action) {
+        case 'import':
+          this.importService.get().subscribe((component: ActionComponent) => {
+            this.pruebaDialog(component);
+          });
+          break;
+        default:
+          break;
+      }
     });
     this.dataservice.columns$.subscribe((columns: any) => {
       this.columnDefs = columns;
     });
     this.dataservice.data$.subscribe((data: any) => {
-      console.log(data)
+      console.log(data);
     });
-    this.dataservice.types$.subscribe((types: any) => {
-
-    });
+    this.dataservice.types$.subscribe((types: any) => {});
     this.rowFunctions = [
       {
         name: 'Eliminar Fila',
@@ -96,31 +100,32 @@ export class HomeComponent implements OnInit {
 
   private pruebaDialog(component: ActionComponent) {
     this.dialogRef = this.dialog.open(ActionDialogComponent, {
-      disableClose: false
+      disableClose: false,
     });
-    this.dialogRef.componentInstance.component = component
+    this.dialogRef.componentInstance.component = component;
     this.dialogRef.afterClosed().subscribe((confirm: any) => {
-      if ( confirm )
-      {
-        this.importService.post(confirm, {startRow: this.minRow, endRow: this.maxRow}).subscribe((data: any) => this.dataservice.updateDataEvents(data));
+      if (confirm) {
+        this.importService
+          .post(confirm, { startRow: this.minRow, endRow: this.maxRow })
+          .subscribe((data: any) => this.dataservice.updateDataEvents(data));
       }
     });
   }
 
   onGridReady(params: any) {
-    console.log("onGridReady")
+    console.log('onGridReady');
     var datasource = {
       getRows: (params: IGetRowsParams) => {
         this.dataSubscription.unsubscribe();
         this.info = 'Getting datasource rows, start: ' + params.startRow + ', end: ' + params.endRow;
-        console.log(this.info)
+        console.log(this.info);
         this.dataSubscription = this.dataservice.data$.subscribe((data: any) => {
           this.rowData = data;
-          params.successCallback(this.rowData)
-          this.ref.detectChanges()
+          params.successCallback(this.rowData);
+          this.ref.detectChanges();
         });
-        this.dataservice.get({startRow: params.startRow, endRow: params.endRow}).subscribe((data) => {
-          this.dataservice.updateDataEvents(data)
+        this.dataservice.get({ startRow: params.startRow, endRow: params.endRow }).subscribe((data) => {
+          this.dataservice.updateDataEvents(data);
         });
       },
     };
