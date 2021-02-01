@@ -31,7 +31,7 @@ class DatabaseExporterPlugin:
     id: str = uuid.uuid4().hex
 
 @dataclass
-class DatasetProcessorPlugin:
+class ProcessorPlugin:
     name: str
     description: str
     interfacename: str

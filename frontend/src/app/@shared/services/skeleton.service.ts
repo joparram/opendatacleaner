@@ -5,11 +5,10 @@ import { Observable } from 'rxjs';
 const baseURL = 'http://localhost:4200/skeleton';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SkeletonService {
-
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   readAll(): Observable<any> {
     return this.httpClient.get(baseURL);
@@ -38,5 +37,4 @@ export class SkeletonService {
   searchByName(name): Observable<any> {
     return this.httpClient.get(`${baseURL}?name=${name}`);
   }
-
 }

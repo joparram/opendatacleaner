@@ -1,3 +1,1 @@
-export interface Import {
-
-}
+export interface Import {}

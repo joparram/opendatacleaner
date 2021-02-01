@@ -7,9 +7,9 @@ import { MaterialModule } from '@app/material.module';
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { AgGridModule } from 'ag-grid-angular';
-import { ImportService } from '@shared/services/import.service'
-import { ImportDialogComponent } from './import-dialog/import-dialog.component'
-import { FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { ImportService } from '@shared/services/import.service';
+import { ImportDialogComponent } from './import-dialog/import-dialog.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   imports: [
     CommonModule,
@@ -20,9 +20,9 @@ import { FormsModule, ReactiveFormsModule} from '@angular/forms';
     HomeRoutingModule,
     AgGridModule.withComponents([]),
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   declarations: [HomeComponent, ImportDialogComponent],
-  providers: [ImportService]
+  providers: [ImportService],
 })
 export class HomeModule {}

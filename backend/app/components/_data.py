@@ -30,6 +30,8 @@ class dataframeHandler:
     def saveDataframe(df):
         columns = dataframeHandler.fixHeaders(df)
         df.columns = columns
+        # transform empty string to nan
+        df = df.replace(r'^\s+$', np.nan, regex=True)
         df.to_feather("cached")
 
     @staticmethod
@@ -55,10 +57,13 @@ class dataframeHandler:
         df = dataframeHandler.getDataframe()
         columnsraw = list(df.columns)
         columns = []
-        data = df.to_dict('records')
+        data = {}
+        # Fix json format
         for column in columnsraw:
             columns.append(dict (headerName=column, field=column))
         if "startRow" in pagination and "endRow" in pagination:
             if pagination["startRow"] != None and pagination["endRow"] != None:
-                data = df.iloc[pagination["startRow"]:pagination["endRow"]].to_dict('records')
+                data = df.iloc[pagination["startRow"]:pagination["endRow"]].replace({np.nan:None}).to_dict('records')
+        else:
+            data = df.replace({np.nan:None}).to_dict('records')
         return dict (data=data, types=df.dtypes.apply(lambda x: x.name).to_dict(), columns=columns)

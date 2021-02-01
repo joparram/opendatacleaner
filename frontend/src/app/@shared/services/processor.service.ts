@@ -3,12 +3,12 @@ import { HttpClient, HttpHeaders, HttpParams, HttpRequest } from '@angular/commo
 import { Observable } from 'rxjs';
 import { Pagination } from '../models/pagination';
 
-const baseURL = 'http://localhost:5000/importer';
+const baseURL = 'http://localhost:5000/processor';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ImportService {
+export class ProcessorService {
   constructor(private httpClient: HttpClient) {}
 
   get(): Observable<any> {

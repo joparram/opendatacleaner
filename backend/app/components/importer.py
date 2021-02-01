@@ -2,6 +2,7 @@ from ..api import _v1
 from pathlib import Path
 from app.error import Error
 import pandas as pd
+import numpy as np
 from app.components._data import dataframeHandler
 
 # id del componente

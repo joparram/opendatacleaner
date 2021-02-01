@@ -7,7 +7,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { ActionDialogComponent } from './components/component-dialog/action-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 @NgModule({
-  imports: [FlexLayoutModule, MaterialModule, CommonModule, FormsModule,ReactiveFormsModule],
+  imports: [FlexLayoutModule, MaterialModule, CommonModule, FormsModule, ReactiveFormsModule],
   declarations: [LoaderComponent, ActionDialogComponent],
   exports: [LoaderComponent, ActionDialogComponent],
 })
