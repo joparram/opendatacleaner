@@ -23,14 +23,9 @@ export class ImportDialogComponent implements AfterViewInit, OnChanges {
   public action: any = undefined;
   public component: ActionComponent;
   public parameters: FormGroup;
-  hola: string = 'hola';
+
   @ViewChildren('actions') actions: any;
-  constructor(
-    public dialogRef: MatDialogRef<ImportDialogComponent>,
-    private importService: ImportService,
-    private ref: ChangeDetectorRef,
-    private fb: FormBuilder
-  ) {
+  constructor(public dialogRef: MatDialogRef<ImportDialogComponent>, private ref: ChangeDetectorRef) {
     this.parameters = new FormGroup({});
   }
 

@@ -16,17 +16,37 @@
 <div class="grid-container">
   <div class="actions">
     <mat-list class="action-list">
-      <div mat-subheader>Funciones Fila</div>
-      <mat-list-item *ngFor="let folder of rowFunctions">
+      <div mat-subheader>Funciones</div>
+      <mat-list-item (click)="click({ action: 'process' })">
         <mat-icon mat-list-icon>build_circle</mat-icon>
-        <div mat-line>{{ folder.name }}</div>
+        <div mat-line>Procesar</div>
       </mat-list-item>
-      <mat-divider></mat-divider>
-      <div mat-subheader>Funciones Columna</div>
-      <mat-list-item *ngFor="let note of columnFunctions">
+      <mat-list-item>
         <mat-icon mat-list-icon>build_circle</mat-icon>
-        <div mat-line>{{ note.name }}</div>
+        <div mat-line>Eliminar fila</div>
       </mat-list-item>
+      <mat-list-item>
+        <mat-icon mat-list-icon>build_circle</mat-icon>
+        <div mat-line>Eliminar Columna</div>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon mat-list-icon>build_circle</mat-icon>
+        <div mat-line>Cambiar tipo</div>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon mat-list-icon>build_circle</mat-icon>
+        <div mat-line>Exportar a BD</div>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon mat-list-icon>build_circle</mat-icon>
+        <div mat-line>Pipeline</div>
+      </mat-list-item>
+    </mat-list>
+    <mat-divider></mat-divider>
+    <mat-list class="info">
+      <mat-list-item> Fila: {{ selectedRow }} </mat-list-item>
+      <mat-list-item> Columna: {{ selectedColumn | slice: 0:8 }} </mat-list-item>
+      <mat-list-item> Tipo: {{ getSelectedColumnType() }} </mat-list-item>
     </mat-list>
   </div>
   <div class="sugestions">

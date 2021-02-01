@@ -15,10 +15,22 @@ componentDescription = "Procesado de datos"
 componentInterfaceName = "Procesar..."
 # Acciones que puede realizar el componente y parámetros que genera la interfaz
 Actions = [_v1.Action(
-                      name="default", 
-                      description="acción por defecto", 
+                      name="averageImputing", 
+                      description="Imputación de datos faltantes en base a la media de la columna", 
                       params=[
-                          _v1.Param(name="file", kind="file"),
+                        _v1.Param(name="axis", kind="number"),
+                      ]),
+            _v1.Action(
+                      name="mostFrecuencyImputing",
+                      description="Imputación de datos faltantes en base al valor más frecuente", 
+                      params=[
+
+                      ]),
+            _v1.Action(
+                      name="interpolationImputing",
+                      description="Imputación de datos faltantes utilizando una interpolación", 
+                      params=[
+
                       ])
           ]
 ## Component processor
@@ -28,6 +40,9 @@ class Processor:
     def __init__(self):
         self.actions = {
             "default": self.defaultHandler,
+            "averageImputing": self.averageImputingHandler,
+            "mostFrecuencyImputing": self.mostFrecuencyImputingHandler,
+            "interpolationImputing": self.interpolationImputingHandler
         }
         self.pagination = {
             "startRow": None,
@@ -42,25 +57,48 @@ class Processor:
         self.pagination["endRow"]= None if endRowParam is None else int(endRowParam)
         
     # default application handle which allow to import files though file handlers
-    def defaultHandler(self):
+    def defaultHandler(self, request):
+        console.log("defaultHandler")
+
+    def averageImputingHandler(self, request):
         df = dataframeHandler.getDataframe()
-        df[['rating']] = df[['rating']].fillna(df.mean(axis=0))
+        column = request.form.get('column')
+        axis = request.form.get('axis')
+        print("axis: ", axis)
+        print("column: ", column)
+        df[[column]] = df[[column]].fillna(df.mean(axis=int(axis)))
         pd.set_option("max_columns", None) # show all cols
         dataframeHandler.saveDataframe(df)
 
-    def meanDataImputing():
-        print("meanDataImputing")
+    def mostFrecuencyImputingHandler(self, request):
+        print("mostFrecuencyImputingHandler")
+        df = dataframeHandler.getDataframe()
+        column = request.form.get('column')
+        df[[column]] = df[[column]].fillna(df[[column]].mode().iloc[0])
+        pd.set_option("max_columns", None) # show all cols
+        dataframeHandler.saveDataframe(df)
+
+    def interpolationImputingHandler(self, request):
+        df = dataframeHandler.getDataframe()
+        column = request.form.get('column')
+        
+        df = df.interpolate(method='polynomial', order=2, axis=0)
+
+        print("fin interpolación")
+        pd.set_option("max_columns", None) # show all cols
+        dataframeHandler.saveDataframe(df)
 
     # call function triggered
     def __call__(self, request: any):
         self._updatePagination(request)
         action = request.args.get("action")
+        print("accion: ", action)
         if action is None:
-            self.actions["default"]()
+            self.actions["default"](request)
         elif action not in self.actions:
             raise Error('Accion {} desconocida'.format(action))
         else:
-            self.actions[action]()
+            self.actions[action](request)
         return dataframeHandler.getAllData(self.pagination)
 
 # component registration in the internal api

@@ -42,6 +42,7 @@ export class ActionDialogComponent implements OnInit {
   }
   getFormData() {
     let params = this.parameters.getRawValue();
+    params.action = this.action.name;
     this.fileInputs.forEach((elem: ElementRef) => {
       let files = elem.nativeElement.files;
       let name = elem.nativeElement.name;
@@ -53,6 +54,7 @@ export class ActionDialogComponent implements OnInit {
         } catch (err) {}
       }
     });
+    console.log(params);
     return params;
   }
   public onChanges() {

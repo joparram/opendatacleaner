@@ -22,6 +22,7 @@ Actions = [_v1.Action(
                           _v1.Param(name="confianza", kind="text"),
                           _v1.Param(name="file", kind="file"),
                            _v1.Param(name="destruir", kind="boolean"),
+                           _v1.Param(name="parametroNuevo", kind="text"),
                       ])
           ]
 
@@ -29,6 +30,7 @@ class ImporterPluginTest:
     def __init__(self):
         print("llamada constructor de ImporterPluginTest ")
     def __call__(self, request):
+        
         print("Ejecución de ImporterPluginTest")
 
 
