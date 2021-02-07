@@ -1,13 +1,9 @@
-# node base image
-FROM node:15.4.0-alpine
-# create app
+FROM node:15.4.0-alpine as build-step
 RUN mkdir -p /app
-RUN whoami && ls -l
-# working directory
 WORKDIR /app
-# expose angular port
-EXPOSE 4200
-COPY . ./
+COPY package.json /app
 RUN npm install
-# Development start command
-CMD ["npm", "start"]
+COPY . /app
+RUN npm run build --prod
+FROM nginx:1.17.1-alpine
+COPY --from=build-step /app/dist /usr/share/nginx/html
