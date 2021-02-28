@@ -25,7 +25,7 @@ Actions = [
                       name="setType", 
                       description="Transforma una columna a un tipo concreto", 
                       params=[
-                          _v1.Param(name="tipo", options=["object", "int64", "float64", "bool", "datetime64"], kind="select"),
+                          _v1.Param(name="type", options=["object", "int64", "float64", "bool", "datetime64[ns]"], kind="select"),
                       ])
           ]
 ## Component importer
@@ -34,7 +34,11 @@ class Data:
     # constructor which initialize handlers and defined actions
     def __init__(self):
         self.actions = {
-            "setType": self.defaultHandler,
+            "setType": self.setTypeHandler,
+        }
+        self.typesHandlers = {
+            "float64": self.setTypeFloatHandler,
+            "int64": self.setTypeIntHandler
         }
         self.pagination = {
             "startRow": None,
@@ -49,25 +53,39 @@ class Data:
         self.pagination["startRow"] = None if startRowParam is None else int(startRowParam)
         self.pagination["endRow"]= None if endRowParam is None else int(endRowParam)
         
+    def setTypeHandler(self, request):
+        _type = request.form.get('type')
+        if _type in self.typesHandlers:
+            self.typesHandlers[_type](request)
+        else:
+            column = request.form.get('column')
+            df = dataframeHandler.getDataframe()
+            df[[column]] = df[[column]].astype(_type)
+            dataframeHandler.saveDataframe(df)
 
-    # default application handle which allow to import files though file handlers
-    def defaultHandler(self, file):
-        extension = Path(file.filename).suffix
-        if extension not in self.fileHandlers:
-            raise Error('Extensión {} no soportada'.format(extension))
-        self.fileHandlers[extension](file)
-    
+    def setTypeFloatHandler(self, request):
+        column = request.form.get('column')
+        df = dataframeHandler.getDataframe()
+        df[column] = pd.to_numeric(df[column], errors='coerce')
+        dataframeHandler.saveDataframe(df)
+
+    def setTypeIntHandler(self, request):
+        column = request.form.get('column')
+        df = dataframeHandler.getDataframe()
+        df[column] = pd.to_numeric(df[column], errors='coerce')
+        dataframeHandler.saveDataframe(df)
+
     # call function triggered
     def __call__(self, request: any):
         self._updatePagination(request)
-        file = request.files['file']
         action = request.args.get("action")
+        print("accion: ", action)
         if action is None:
-            self.actions["default"](file)
+            raise Error('No se ha seleccionado una acción')
         elif action not in self.actions:
             raise Error('Accion {} desconocida'.format(action))
         else:
-            self.actions[action](file)
+            self.actions[action](request)
         return dataframeHandler.getAllData(self.pagination)
 
 # component registration in the internal api

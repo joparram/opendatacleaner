@@ -20,9 +20,24 @@
 
 .logo-image {
   vertical-align: middle;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
+  width: 30px;
+  margin-right: 8px;
   overflow: hidden;
   margin-top: -6px;
+  color: red;
+  font-weight: bold;
+  stroke-width: 2;
+}
+
+.logo-image .st0 {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 25 !important;
+  stroke-miterlimit: 10;
+}
+.logo-image .st1 {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 20 !important;
+  stroke-miterlimit: 10;
 }

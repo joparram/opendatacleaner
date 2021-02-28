@@ -31,7 +31,7 @@ plugin_loader.load_plugins()
 @app.route("/")
 def hello():
     return jsonify({'text':'Hello World!'})
-    
+
 api.add_resource(ProcessorController, '/processor')  # Route_1
 api.add_resource(ImporterController, '/importer')  # Route_1
 api.add_resource(ComponentesController, '/components')  # Route_1
