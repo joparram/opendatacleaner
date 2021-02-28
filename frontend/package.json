@@ -20,7 +20,7 @@
     "generate": "ng generate"
   },
   "dependencies": {
-    "@ag-grid-community/angular": "^24.1.0",
+    "@ag-grid-community/angular": "24.1.0",
     "@angular/animations": "^10.1.4",
     "@angular/cdk": "^10.2.3",
     "@angular/common": "^10.1.4",
@@ -35,9 +35,9 @@
     "@angular/router": "^10.1.4",
     "@angular/service-worker": "^10.1.4",
     "@ngx-translate/core": "^13.0.0",
-    "ag-grid": "^18.1.2",
-    "ag-grid-angular": "^24.1.0",
-    "ag-grid-community": "^24.1.0",
+    "ag-grid": "18.1.2",
+    "ag-grid-angular": "24.1.0",
+    "ag-grid-community": "24.1.0",
     "material-design-icons-iconfont": "^6.0.1",
     "rxjs": "^6.6.3",
     "tslib": "^2.0.1",

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Pagination } from '../models/pagination';
-import { Data } from '../models/data';
 
 const baseURL = 'http://localhost:5000/data';
 
@@ -10,28 +9,34 @@ const baseURL = 'http://localhost:5000/data';
   providedIn: 'root',
 })
 export class DataService {
-  private datasource = new Subject<any>();
-  private columnssource = new Subject<any>();
-  private typessource = new Subject<any>();
-
-  data$ = this.datasource.asObservable();
-  columns$ = this.columnssource.asObservable();
-  types$ = this.typessource.asObservable();
-
   constructor(private httpClient: HttpClient) {}
 
-  updateDataEvents(e: any): void {
-    this.datasource.next(e.data);
-    this.columnssource.next(e.columns);
-    this.typessource.next(e.types);
+  get(): Observable<any> {
+    return this.httpClient.get(baseURL);
   }
 
-  get(pagination: Pagination): Observable<Data> {
-    const params = new HttpParams()
-      .set('startRow', JSON.stringify(pagination.startRow))
-      .set('endRow', JSON.stringify(pagination.endRow));
+  post(data: any, pagination?: Pagination): Observable<any> {
+    let formData: FormData = new FormData();
+    let headers = new HttpHeaders();
+    let params = new HttpParams();
+    /** In Angular 5, including the header Content-Type can invalidate your request */
+    headers.append('Content-Type', 'multipart/form-data');
+    headers.append('Accept', 'application/json');
+    if (pagination !== undefined) {
+      params = new HttpParams()
+        .set('startRow', JSON.stringify(pagination.startRow))
+        .set('endRow', JSON.stringify(pagination.endRow))
+        .set('action', data.action);
+    } else {
+      params = new HttpParams().set('action', data.action);
+    }
+    delete data['action'];
+    for (var key in data) {
+      var name = key;
+      var value = data[key];
+      formData.append(name, value);
+    }
 
-    console.log(params.keys());
-    return this.httpClient.get<Data>(baseURL, { params: params });
+    return this.httpClient.post(baseURL, formData, { headers: headers, params: params });
   }
 }

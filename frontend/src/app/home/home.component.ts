@@ -8,11 +8,11 @@ import { QuoteService } from './quote.service';
 import { ImportService } from '@app/@shared/services/import.service';
 import { ProcessorService } from '@app/@shared/services/processor.service';
 import { MenuService } from '@app/@shared/services/menu.service';
+import { PaginatedDataService } from '@app/@shared/services/paginateddata.service';
 import { DataService } from '@app/@shared/services/data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ActionComponent } from '@app/@shared/models/action-component';
 import { ActionDialogComponent } from '@shared/components/component-dialog/action-dialog.component';
-import { PortalInjector } from '@angular/cdk/portal';
 
 @Component({
   selector: 'app-home',
@@ -46,7 +46,8 @@ export class HomeComponent implements OnInit {
     private menuService: MenuService,
     private dialog: MatDialog,
     private ref: ChangeDetectorRef,
-    private dataservice: DataService
+    private paginateddataservice: PaginatedDataService,
+    private dataService: DataService
   ) {
     this.menuService.menu$.subscribe((event) => {
       switch (event.action) {
@@ -60,17 +61,22 @@ export class HomeComponent implements OnInit {
             this.processorDialog(component);
           });
           break;
+        case 'data':
+          this.dataService.get().subscribe((component: ActionComponent) => {
+            this.dataDialog(component);
+          });
+          break;
         default:
           break;
       }
     });
-    this.dataservice.columns$.subscribe((columns: any) => {
+    this.paginateddataservice.columns$.subscribe((columns: any) => {
       this.columnDefs = columns;
     });
-    this.dataservice.data$.subscribe((data: any) => {
+    this.paginateddataservice.data$.subscribe((data: any) => {
       console.log(data);
     });
-    this.dataservice.types$.subscribe((types: any) => {
+    this.paginateddataservice.types$.subscribe((types: any) => {
       this.types = types;
       console.log(this.types);
     });
@@ -91,8 +97,6 @@ export class HomeComponent implements OnInit {
       rowSelection: 'single',
       cacheBlockSize: 100,
       maxBlocksInCache: 1,
-      enableServerSideFilter: false,
-      enableServerSideSorting: false,
       rowModelType: 'infinite',
       pagination: true,
       paginationAutoPageSize: true,
@@ -100,15 +104,8 @@ export class HomeComponent implements OnInit {
         this.selectedColumn = e.column.colId;
         this.selectedRow = e.rowIndex;
       },
-      onSelectionChanged: (e: any) => {},
-      CellFocusedEvent: {
-        column: (e: any) => {
-          console.log('hola');
-        },
-      },
       defaultColDef: {
         cellStyle: (params: any) => {
-          // console.log(params.colDef);
           if (params.colDef === this.selectedColumn) {
             return { 'background-color': '#b7e4ff' };
           }
@@ -124,9 +121,46 @@ export class HomeComponent implements OnInit {
       return this.types[this.selectedColumn];
     }
   }
-  onSelectionChanged() {
-    console.log('onSelectionChanged');
+
+  click(event: any) {
+    this.menuService.updateMenuEvents(event);
   }
+
+  onGridReady(params: any) {
+    console.log('onGridReady');
+    var datasource = {
+      getRows: (params: IGetRowsParams) => {
+        this.dataSubscription.unsubscribe();
+        this.info = 'Getting datasource rows, start: ' + params.startRow + ', end: ' + params.endRow;
+        console.log(this.info);
+        this.dataSubscription = this.paginateddataservice.data$.subscribe((data: any) => {
+          this.rowData = data;
+          params.successCallback(this.rowData);
+          this.ref.detectChanges();
+        });
+        this.paginateddataservice.get({ startRow: params.startRow, endRow: params.endRow }).subscribe((data: any) => {
+          this.paginateddataservice.updateDataEvents(data);
+        });
+      },
+    };
+    params.api.setDatasource(datasource);
+  }
+
+  ngOnInit() {
+    this.isLoading = true;
+    this.quoteService
+      .getRandomQuote({ category: 'dev' })
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe((quote: string) => {
+        this.quote = quote;
+      });
+  }
+
+  /*DIALOGS*/
   private importDialog(component: ActionComponent) {
     this.dialogRef = this.dialog.open(ActionDialogComponent, {
       disableClose: false,
@@ -136,7 +170,7 @@ export class HomeComponent implements OnInit {
       if (confirm) {
         this.importService
           .post(confirm, { startRow: this.minRow, endRow: this.maxRow })
-          .subscribe((data: any) => this.dataservice.updateDataEvents(data));
+          .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
       }
     });
   }
@@ -151,46 +185,24 @@ export class HomeComponent implements OnInit {
         dataForm.row = this.selectedRow;
         this.processorService
           .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
-          .subscribe((data: any) => this.dataservice.updateDataEvents(data));
+          .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
       }
     });
   }
-
-  click(event: any) {
-    this.menuService.updateMenuEvents(event);
-    console.log(event);
+  private dataDialog(component: ActionComponent) {
+    this.dialogRef = this.dialog.open(ActionDialogComponent, {
+      disableClose: false,
+    });
+    this.dialogRef.componentInstance.component = component;
+    this.dialogRef.afterClosed().subscribe((dataForm: any) => {
+      if (dataForm) {
+        dataForm.column = this.selectedColumn;
+        dataForm.row = this.selectedRow;
+        this.dataService
+          .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
+          .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
+      }
+    });
   }
-
-  onGridReady(params: any) {
-    console.log('onGridReady');
-    var datasource = {
-      getRows: (params: IGetRowsParams) => {
-        this.dataSubscription.unsubscribe();
-        this.info = 'Getting datasource rows, start: ' + params.startRow + ', end: ' + params.endRow;
-        console.log(this.info);
-        this.dataSubscription = this.dataservice.data$.subscribe((data: any) => {
-          this.rowData = data;
-          params.successCallback(this.rowData);
-          this.ref.detectChanges();
-        });
-        this.dataservice.get({ startRow: params.startRow, endRow: params.endRow }).subscribe((data) => {
-          this.dataservice.updateDataEvents(data);
-        });
-      },
-    };
-    params.api.setDatasource(datasource);
-  }
-  ngOnInit() {
-    this.isLoading = true;
-    this.quoteService
-      .getRandomQuote({ category: 'dev' })
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
-      .subscribe((quote: string) => {
-        this.quote = quote;
-      });
-  }
+  /*FIN DIALOGS*/
 }

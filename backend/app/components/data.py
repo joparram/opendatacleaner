@@ -6,31 +6,35 @@ import numpy as np
 from app.components._data import dataframeHandler
 
 # id del componente
-componentId = "databaseExporter"
+componentId = "data"
 # Nombre del componente
-componentName = "DatabaseExporter"
+componentName = "data"
 # Descripción del componente
-componentDescription = "exportar datos a base de datos..."
+componentDescription = "Edición de datos y paginación"
 # Nombre de la opción en la interfaz
-componentInterfaceName = "Exportar..."
+componentInterfaceName = "Modificar..."
 # Acciones que puede realizar el componente y parámetros que genera la interfaz
-Actions = [_v1.Action(
-                      name="default", 
-                      description="acción por defecto", 
+Actions = [
+            _v1.Action(
+                      name="updateCell", 
+                      description="cambia el valor de una celda", 
                       params=[
-                          _v1.Param(name="file", kind="file"),
+                          _v1.Param(name="valor", kind="string"),
+                      ]),
+            _v1.Action(
+                      name="setType", 
+                      description="Transforma una columna a un tipo concreto", 
+                      params=[
+                          _v1.Param(name="tipo", options=["object", "int64", "float64", "bool", "datetime64"], kind="select"),
                       ])
           ]
 ## Component importer
 ## This component handle the datasets import into the project
-class DatabaseExporter:
+class Data:
     # constructor which initialize handlers and defined actions
     def __init__(self):
-        self.fileHandlers = {
-            ".csv": self.csvHandler,
-        }
         self.actions = {
-            "default": self.defaultHandler,
+            "setType": self.defaultHandler,
         }
         self.pagination = {
             "startRow": None,
@@ -41,13 +45,10 @@ class DatabaseExporter:
     def _updatePagination (self, request: any):
         startRowParam = request.args.get('startRow')
         endRowParam = request.args.get('endRow')
+        column = request.form.get('column')
         self.pagination["startRow"] = None if startRowParam is None else int(startRowParam)
         self.pagination["endRow"]= None if endRowParam is None else int(endRowParam)
         
-    # handle csv files read and import into a dataframe
-    def csvHandler (self, file: any):
-        df = pd.read_csv(file)
-        dataframeHandler.saveDataframe(df)
 
     # default application handle which allow to import files though file handlers
     def defaultHandler(self, file):
@@ -55,7 +56,7 @@ class DatabaseExporter:
         if extension not in self.fileHandlers:
             raise Error('Extensión {} no soportada'.format(extension))
         self.fileHandlers[extension](file)
-
+    
     # call function triggered
     def __call__(self, request: any):
         self._updatePagination(request)
@@ -70,5 +71,5 @@ class DatabaseExporter:
         return dataframeHandler.getAllData(self.pagination)
 
 # component registration in the internal api
-component = _v1.Component(name=componentName, description=componentDescription, interfacename=componentInterfaceName, actions=Actions, handler_class=Importer)
+component = _v1.Component(name=componentName, description=componentDescription, interfacename=componentInterfaceName, actions=Actions, handler_class=Data)
 _v1.register_component(component)

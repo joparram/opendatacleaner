@@ -15,11 +15,11 @@ class ProcessorController(Resource):
     # Obtiene la configuración del componente y sus plugins
     def get(self): 
         components: Components = _v1._private.container[Components]
-        processorPlugins: ProcessorPlugins = _v1._private.container[ProcessorPlugins]
+        dataPlugins: ProcessorPlugins = _v1._private.container[ProcessorPlugins]
         component = next(x for x in components if x.name == componentName )
         cj = dataclassToJson(component)
-        cp = dataclassToJson(processorPlugins)
-        print(processorPlugins)
+        cp = dataclassToJson(dataPlugins)
+        print(dataPlugins)
         cj["plugins"] = cp
         return jsonify(cj)
 

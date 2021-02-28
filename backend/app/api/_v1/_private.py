@@ -1,8 +1,8 @@
 import sys
 from typing import Any, Type
-from ...plugin import ExporterPlugin, ImporterPlugin, ProcessorPlugin, DatabaseExporterPlugin
+from ...plugin import ExporterPlugin, ImporterPlugin, ProcessorPlugin, DatabaseExporterPlugin, DataPlugin
 from ...component import Component
-from ...components._plugins import ImporterPlugins, ExporterPlugins, DatabaseExporterPlugins, ProcessorPlugins
+from ...components._plugins import ImporterPlugins, ExporterPlugins, DatabaseExporterPlugins, ProcessorPlugins, DataPlugins
 from ...components._components import Components
 import cargo
 
@@ -12,6 +12,7 @@ def create_container():
     _container[ExporterPlugins] = []
     _container[DatabaseExporterPlugins] = []
     _container[ProcessorPlugins] = []
+    _container[DataPlugins] = []
     _container[Components] = []
     return _container
 
@@ -30,6 +31,11 @@ def register_processor_plugin(plugin: ProcessorPlugin):
 def register_database_exporter_plugin(plugin: DatabaseExporterPlugin):
     container[DatabaseExporterPlugins].append(plugin)
     container[plugin.handler_class] = plugin.handler_class
+
+def register_data_plugin(plugin: DataPlugin):
+    container[dataPlugins].append(plugin)
+    container[plugin.handler_class] = plugin.handler_class
+
 
 def register_component(component: Component):
     print("registro de componente: "+component.name)
