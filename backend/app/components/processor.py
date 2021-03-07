@@ -30,7 +30,9 @@ Actions = [_v1.Action(
                       name="interpolationImputing",
                       description="Imputación de datos faltantes utilizando una interpolación", 
                       params=[
-
+                        _v1.Param(name="method", kind="select", options=["polynomial", 'linear', 'time', 'index', 'values', 'nearest', 'zero', 'slinear', 'quadratic', 'cubic', 'barycentric', 'krogh', 'spline']),
+                        _v1.Param(name="order", kind="number"),
+                        _v1.Param(name="axis", kind="number"),
                       ])
           ]
 ## Component processor
@@ -81,10 +83,11 @@ class Processor:
     def interpolationImputingHandler(self, request):
         df = dataframeHandler.getDataframe()
         column = request.form.get('column')
-        
-        df = df.interpolate(method='polynomial', order=2, axis=0)
-
-        print("fin interpolación")
+        method = request.form.get('method')
+        order = request.form.get('order')
+        axis = request.form.get('axis')
+        # df = df.interpolate(method='polynomial', order=2, axis=0)
+        df[[column]] = df[[column]].interpolate(method=method, order=int(order), axis=int(axis))
         pd.set_option("max_columns", None) # show all cols
         dataframeHandler.saveDataframe(df)
 

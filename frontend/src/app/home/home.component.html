@@ -17,6 +17,10 @@
   <div class="actions">
     <mat-list class="action-list">
       <div mat-subheader>Funciones</div>
+      <mat-list-item (click)="click({ action: 'data' })">
+        <mat-icon mat-list-icon>build_circle</mat-icon>
+        <div mat-line>Modificar datos</div>
+      </mat-list-item>
       <mat-list-item (click)="click({ action: 'process' })">
         <mat-icon mat-list-icon>build_circle</mat-icon>
         <div mat-line>Procesar</div>

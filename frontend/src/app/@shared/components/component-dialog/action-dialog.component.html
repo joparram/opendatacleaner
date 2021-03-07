@@ -43,6 +43,10 @@
       <option value="true" selected>true</option>
       <option value="false">false</option>
     </select>
+
+    <select *ngIf="param.kind === 'select'" [formControlName]="param?.name" matNativeControl #fileInput>
+      <option [value]="option" *ngFor="let option of param.options">{{ option }}</option>
+    </select>
   </div>
 </form>
 <!-- {confirm: true, plugin: plugin, action: action, parameters: parameters.getRawValue()} -->
