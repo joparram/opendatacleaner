@@ -19,7 +19,7 @@ Actions = [
                       name="updateCell", 
                       description="cambia el valor de una celda", 
                       params=[
-                          _v1.Param(name="valor", kind="string"),
+                          _v1.Param(name="value", kind="number"),
                       ]),
             _v1.Action(
                       name="setType", 
@@ -35,6 +35,7 @@ class Data:
     def __init__(self):
         self.actions = {
             "setType": self.setTypeHandler,
+            "updateCell": self.updateCellHandler,
         }
         self.typesHandlers = {
             "float64": self.setTypeFloatHandler,
@@ -73,6 +74,18 @@ class Data:
         column = request.form.get('column')
         df = dataframeHandler.getDataframe()
         df[column] = pd.to_numeric(df[column], errors='coerce')
+        dataframeHandler.saveDataframe(df)
+
+        
+    def updateCellHandler(self, request):
+        column = request.form.get('column')
+        row = int(request.form.get('row'))
+        value = request.form.get('value')
+        if not value or value.isspace():
+          value = None
+        df = dataframeHandler.getDataframe()
+        pd.set_option("max_columns", None) # show all cols
+        df.at[row, column] = value
         dataframeHandler.saveDataframe(df)
 
     # call function triggered
