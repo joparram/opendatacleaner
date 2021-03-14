@@ -1,0 +1,50 @@
+.container {
+  width: 100%;
+  overflow: scroll;
+}
+.ex-table {
+  display: table;
+  border: 1px solid #c0c0c0;
+  border-collapse: collapse;
+  padding: 5px;
+  width: 100%;
+  height: 100%;
+}
+.ex-table th {
+  border: 1px solid #c0c0c0;
+
+  background: #f0f0f0;
+}
+.ex-table th button {
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+}
+.ex-table td {
+  border: 1px solid #c0c0c0;
+  width: 400px;
+  height: 40px;
+}
+.ex-table td input {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.ex-table td input:focus {
+  outline-color: #2196f3;
+}
+
+.ex-cell-default:hover {
+  cursor: default;
+}
+
+.ex-cell-edit {
+  outline: none;
+}
+
+.ex-cell-edit:hover {
+  cursor: text;
+}

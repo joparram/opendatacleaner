@@ -1,0 +1,47 @@
+<div class="container">
+  <table class="ex-table">
+    <thead>
+      <tr>
+        <th><button>Header 1</button></th>
+        <th><button>Header 2</button></th>
+        <th><button>Header 3</button></th>
+        <th><button>Header 4</button></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <input
+            [ngClass]="[cellStyle]"
+            [readonly]="cellStyle == 'ex-cell-default'"
+            (dblclick)="onCellDoubleClick()"
+            (blur)="onCellBlur()"
+            type="text"
+            value="asdasd"
+          />
+        </td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+      </tr>
+      <tr>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+      </tr>
+      <tr>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+      </tr>
+      <tr>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+        <td><input type="text" /></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
