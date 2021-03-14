@@ -100,6 +100,7 @@ export class HomeComponent implements OnInit {
       rowModelType: 'infinite',
       pagination: true,
       paginationAutoPageSize: true,
+      onCellValueChanged: (e: any) => this.updateCellValue(e),
       onCellFocused: (e: any) => {
         this.selectedColumn = e.column.colId;
         this.selectedRow = e.rowIndex;
@@ -110,7 +111,7 @@ export class HomeComponent implements OnInit {
             return { 'background-color': '#b7e4ff' };
           }
         },
-        editable: false,
+        editable: true,
         // make every column use 'text' filter by default
         filter: 'agTextColumnFilter',
       },
@@ -125,7 +126,17 @@ export class HomeComponent implements OnInit {
   click(event: any) {
     this.menuService.updateMenuEvents(event);
   }
-
+  updateCellValue(e: any) {
+    let dataForm = {
+      column: e.colDef.field,
+      row: e.rowIndex,
+      action: 'updateCell',
+      value: e.value,
+    };
+    this.dataService
+      .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
+      .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
+  }
   onGridReady(params: any) {
     console.log('onGridReady');
     var datasource = {
