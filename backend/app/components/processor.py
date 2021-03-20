@@ -4,6 +4,8 @@ from app.error import Error
 import pandas as pd
 from app.components._data import dataframeHandler
 import numpy as np
+from sklearn.impute import KNNImputer
+from sklearn import preprocessing
 
 # id del componente
 componentId = "processor"
@@ -15,24 +17,30 @@ componentDescription = "Procesado de datos"
 componentInterfaceName = "Procesar..."
 # Acciones que puede realizar el componente y parámetros que genera la interfaz
 Actions = [_v1.Action(
-                      name="averageImputing", 
-                      description="Imputación de datos faltantes en base a la media de la columna", 
+                      name="averageImputing",
+                      description="Imputación de datos faltantes en base a la media de la columna",
                       params=[
                         _v1.Param(name="axis", kind="number"),
                       ]),
             _v1.Action(
                       name="mostFrecuencyImputing",
-                      description="Imputación de datos faltantes en base al valor más frecuente", 
+                      description="Imputación de datos faltantes en base al valor más frecuente",
                       params=[
 
                       ]),
             _v1.Action(
                       name="interpolationImputing",
-                      description="Imputación de datos faltantes utilizando una interpolación", 
+                      description="Imputación de datos faltantes utilizando una interpolación",
                       params=[
                         _v1.Param(name="method", kind="select", options=["polynomial", 'linear', 'time', 'index', 'values', 'nearest', 'zero', 'slinear', 'quadratic', 'cubic', 'barycentric', 'krogh', 'spline']),
                         _v1.Param(name="order", kind="number"),
                         _v1.Param(name="axis", kind="number"),
+                      ]),
+            _v1.Action(
+                      name="kNearestNeighborsImputing",
+                      description="Imputación de datos faltantes por vecindad",
+                      params=[
+                        _v1.Param(name="n_neighbors", kind="number"),
                       ])
           ]
 ## Component processor
@@ -44,20 +52,21 @@ class Processor:
             "default": self.defaultHandler,
             "averageImputing": self.averageImputingHandler,
             "mostFrecuencyImputing": self.mostFrecuencyImputingHandler,
-            "interpolationImputing": self.interpolationImputingHandler
+            "interpolationImputing": self.interpolationImputingHandler,
+            "kNearestNeighborsImputing": self.kNearestNeighborsImputingHandler
         }
         self.pagination = {
             "startRow": None,
             "endRow": None,
         }
-        
+
     # Update pagination params from request
     def _updatePagination (self, request: any):
         startRowParam = request.args.get('startRow')
         endRowParam = request.args.get('endRow')
         self.pagination["startRow"] = None if startRowParam is None else int(startRowParam)
         self.pagination["endRow"]= None if endRowParam is None else int(endRowParam)
-        
+
     # default application handle which allow to import files though file handlers
     def defaultHandler(self, request):
         console.log("defaultHandler")
@@ -89,6 +98,33 @@ class Processor:
         # df = df.interpolate(method='polynomial', order=2, axis=0)
         df[[column]] = df[[column]].interpolate(method=method, order=int(order), axis=int(axis))
         pd.set_option("max_columns", None) # show all cols
+        dataframeHandler.saveDataframe(df)
+
+    def kNearestNeighborsImputingHandler(self, request):
+        df = dataframeHandler.getDataframe()
+        column = request.form.get('column')
+        n_neighbors = request.form.get('n_neighbors')
+        encoders = dict()
+        df_copy = df.copy()
+        for col_name in df_copy.columns:
+            print(col_name, df_copy[col_name].dtype)
+            if (df_copy[col_name].dtype == "object"):
+              series = df_copy[col_name]
+              label_encoder = preprocessing.LabelEncoder()
+              df_copy[col_name] = pd.Series(
+                  label_encoder.fit_transform(series[series.notnull()]),
+                  index=series[series.notnull()].index
+              )
+              encoders[col_name] = label_encoder
+            else:
+              print("Column", col_name, "not encoded")
+        imputer = KNNImputer(n_neighbors=int(n_neighbors))
+        imputedData = imputer.fit_transform(df_copy)
+        imputed_dataframe = pd.DataFrame(imputedData, columns=df_copy.columns)
+        if(df[column].dtype == "object"):
+          imputed_dataframe[[column]] = imputed_dataframe[[column]].astype(int)
+          imputed_dataframe[[column]] = encoders[column].inverse_transform(imputed_dataframe[[column]])
+        df[[column]] = imputed_dataframe[[column]]
         dataframeHandler.saveDataframe(df)
 
     # call function triggered
