@@ -25,7 +25,7 @@
         <mat-icon mat-list-icon>build_circle</mat-icon>
         <div mat-line>Procesar</div>
       </mat-list-item>
-      <mat-list-item>
+      <mat-list-item (click)="click({ action: 'databaseexporter' })">
         <mat-icon mat-list-icon>build_circle</mat-icon>
         <div mat-line>Exportar a BD</div>
       </mat-list-item>

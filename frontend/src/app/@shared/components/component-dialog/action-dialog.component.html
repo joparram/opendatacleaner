@@ -34,7 +34,7 @@
     />
     <input *ngIf="param.kind === 'file'" [name]="param?.name" [formControlName]="param?.name" #fileinput type="file" />
     <input
-      *ngIf="param.kind === 'text'"
+      *ngIf="param.kind === 'string'"
       [formControlName]="param?.name"
       type="text"
       [placeholder]="param.description"

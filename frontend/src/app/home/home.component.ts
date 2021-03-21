@@ -6,6 +6,8 @@ import { Observable, Subscription } from 'rxjs';
 import { of } from 'rxjs';
 import { QuoteService } from './quote.service';
 import { ImportService } from '@app/@shared/services/import.service';
+import { DatabaseExporterService } from '@app/@shared/services/databaseexporter.service';
+
 import { ProcessorService } from '@app/@shared/services/processor.service';
 import { MenuService } from '@app/@shared/services/menu.service';
 import { PaginatedDataService } from '@app/@shared/services/paginateddata.service';
@@ -47,7 +49,8 @@ export class HomeComponent implements OnInit {
     private dialog: MatDialog,
     private ref: ChangeDetectorRef,
     private paginateddataservice: PaginatedDataService,
-    private dataService: DataService
+    private dataService: DataService,
+    private databaseexporterService: DatabaseExporterService
   ) {
     this.menuService.menu$.subscribe((event) => {
       switch (event.action) {
@@ -64,6 +67,11 @@ export class HomeComponent implements OnInit {
         case 'data':
           this.dataService.get().subscribe((component: ActionComponent) => {
             this.dataDialog(component);
+          });
+          break;
+        case 'databaseexporter':
+          this.databaseexporterService.get().subscribe((component: ActionComponent) => {
+            this.databaseExporterDialog(component);
           });
           break;
         default:
@@ -210,6 +218,21 @@ export class HomeComponent implements OnInit {
         dataForm.column = this.selectedColumn;
         dataForm.row = this.selectedRow;
         this.dataService
+          .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
+          .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
+      }
+    });
+  }
+  private databaseExporterDialog(component: ActionComponent) {
+    this.dialogRef = this.dialog.open(ActionDialogComponent, {
+      disableClose: false,
+    });
+    this.dialogRef.componentInstance.component = component;
+    this.dialogRef.afterClosed().subscribe((dataForm: any) => {
+      if (dataForm) {
+        dataForm.column = this.selectedColumn;
+        dataForm.row = this.selectedRow;
+        this.databaseexporterService
           .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
           .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
       }
