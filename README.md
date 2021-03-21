@@ -39,12 +39,12 @@ cd frontend
 
 ```p
 cd backend
-.\start.sh
+./start.sh
 ```
 
 ```p
 cd frontend
-.\start.sh
+./start.sh
 ```
 
 ## Architecture
