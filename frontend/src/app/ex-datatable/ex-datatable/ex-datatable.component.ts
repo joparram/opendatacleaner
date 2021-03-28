@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Header } from '../models/header';
 
 @Component({
   selector: 'ex-datatable',
@@ -7,6 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ExDatatableComponent implements OnInit {
   cellStyle: string = 'ex-cell-default';
+
+  @Input()
+  headers: Header[] = [] as Header[];
+
+  @Input()
+  rows: any[] = [];
 
   constructor() {}
 

@@ -2,45 +2,24 @@
   <table class="ex-table">
     <thead>
       <tr>
-        <th><button>Header 1</button></th>
-        <th><button>Header 2</button></th>
-        <th><button>Header 3</button></th>
-        <th><button>Header 4</button></th>
+        <th *ngFor="let header of headers; let i = index">
+          {{ header.name }}
+          <button class="header-menu-button"><i class="arrow down"></i></button>
+        </th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>
+      <tr *ngFor="let row of rows; let i = index">
+        <td *ngFor="let item of row | keyvalue; let i = index">
           <input
             [ngClass]="[cellStyle]"
             [readonly]="cellStyle == 'ex-cell-default'"
             (dblclick)="onCellDoubleClick()"
             (blur)="onCellBlur()"
             type="text"
-            value="asdasd"
+            value="{{ row[headers[i].field] }}"
           />
         </td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-      </tr>
-      <tr>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-      </tr>
-      <tr>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-      </tr>
-      <tr>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
-        <td><input type="text" /></td>
       </tr>
     </tbody>
   </table>
