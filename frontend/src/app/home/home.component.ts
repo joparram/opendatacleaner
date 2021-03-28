@@ -6,6 +6,9 @@ import { Observable, Subscription } from 'rxjs';
 import { of } from 'rxjs';
 import { QuoteService } from './quote.service';
 import { ImportService } from '@app/@shared/services/import.service';
+import { DatabaseExporterService } from '@app/@shared/services/databaseexporter.service';
+import { ExporterService } from '@app/@shared/services/exporter.service';
+
 import { ProcessorService } from '@app/@shared/services/processor.service';
 import { MenuService } from '@app/@shared/services/menu.service';
 import { PaginatedDataService } from '@app/@shared/services/paginateddata.service';
@@ -47,7 +50,9 @@ export class HomeComponent implements OnInit {
     private dialog: MatDialog,
     private ref: ChangeDetectorRef,
     private paginateddataservice: PaginatedDataService,
-    private dataService: DataService
+    private dataService: DataService,
+    private databaseexporterService: DatabaseExporterService,
+    private exporterService: ExporterService
   ) {
     this.menuService.menu$.subscribe((event) => {
       switch (event.action) {
@@ -64,6 +69,16 @@ export class HomeComponent implements OnInit {
         case 'data':
           this.dataService.get().subscribe((component: ActionComponent) => {
             this.dataDialog(component);
+          });
+          break;
+        case 'export':
+          this.exporterService.get().subscribe((component: ActionComponent) => {
+            this.exporterDialog(component);
+          });
+          break;
+        case 'databaseexporter':
+          this.databaseexporterService.get().subscribe((component: ActionComponent) => {
+            this.databaseExporterDialog(component);
           });
           break;
         default:
@@ -100,6 +115,7 @@ export class HomeComponent implements OnInit {
       rowModelType: 'infinite',
       pagination: true,
       paginationAutoPageSize: true,
+      onCellValueChanged: (e: any) => this.updateCellValue(e),
       onCellFocused: (e: any) => {
         this.selectedColumn = e.column.colId;
         this.selectedRow = e.rowIndex;
@@ -110,7 +126,7 @@ export class HomeComponent implements OnInit {
             return { 'background-color': '#b7e4ff' };
           }
         },
-        editable: false,
+        editable: true,
         // make every column use 'text' filter by default
         filter: 'agTextColumnFilter',
       },
@@ -125,7 +141,17 @@ export class HomeComponent implements OnInit {
   click(event: any) {
     this.menuService.updateMenuEvents(event);
   }
-
+  updateCellValue(e: any) {
+    let dataForm = {
+      column: e.colDef.field,
+      row: e.rowIndex,
+      action: 'updateCell',
+      value: e.value,
+    };
+    this.dataService
+      .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
+      .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
+  }
   onGridReady(params: any) {
     console.log('onGridReady');
     var datasource = {
@@ -201,6 +227,41 @@ export class HomeComponent implements OnInit {
         this.dataService
           .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
           .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
+      }
+    });
+  }
+  private databaseExporterDialog(component: ActionComponent) {
+    this.dialogRef = this.dialog.open(ActionDialogComponent, {
+      disableClose: false,
+    });
+    this.dialogRef.componentInstance.component = component;
+    this.dialogRef.afterClosed().subscribe((dataForm: any) => {
+      if (dataForm) {
+        dataForm.column = this.selectedColumn;
+        dataForm.row = this.selectedRow;
+        this.databaseexporterService
+          .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
+          .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
+      }
+    });
+  }
+  private exporterDialog(component: ActionComponent) {
+    this.dialogRef = this.dialog.open(ActionDialogComponent, {
+      disableClose: false,
+    });
+    this.dialogRef.componentInstance.component = component;
+    this.dialogRef.afterClosed().subscribe((dataForm: any) => {
+      if (dataForm) {
+        dataForm.column = this.selectedColumn;
+        dataForm.row = this.selectedRow;
+        this.exporterService.post(dataForm, { startRow: this.minRow, endRow: this.maxRow }).subscribe((data: any) => {
+          const element = document.createElement('a');
+          element.href = URL.createObjectURL(data.file);
+          element.download = data.filename;
+          document.body.appendChild(element);
+          element.click();
+          document.body.removeChild(element);
+        });
       }
     });
   }

@@ -16,16 +16,26 @@ componentInterfaceName = "Modificar..."
 # Acciones que puede realizar el componente y parámetros que genera la interfaz
 Actions = [
             _v1.Action(
-                      name="updateCell", 
-                      description="cambia el valor de una celda", 
+                      name="updateCell",
+                      description="cambia el valor de una celda",
                       params=[
                           _v1.Param(name="value", kind="number"),
                       ]),
             _v1.Action(
-                      name="setType", 
-                      description="Transforma una columna a un tipo concreto", 
+                      name="setType",
+                      description="Transforma una columna a un tipo concreto",
                       params=[
                           _v1.Param(name="type", options=["object", "int64", "float64", "bool", "datetime64[ns]"], kind="select"),
+                      ]),
+            _v1.Action(
+                      name="deleteRow",
+                      description="Transforma una columna a un tipo concreto",
+                      params=[
+                      ]),
+            _v1.Action(
+                      name="deleteColumn",
+                      description="Transforma una columna a un tipo concreto",
+                      params=[
                       ])
           ]
 ## Component importer
@@ -36,6 +46,8 @@ class Data:
         self.actions = {
             "setType": self.setTypeHandler,
             "updateCell": self.updateCellHandler,
+            "deleteRow": self.deleteRowHandler,
+            "deleteColumn": self.deleteColumnHandler,
         }
         self.typesHandlers = {
             "float64": self.setTypeFloatHandler,
@@ -45,7 +57,7 @@ class Data:
             "startRow": None,
             "endRow": None,
         }
-        
+
     # Update pagination params from request
     def _updatePagination (self, request: any):
         startRowParam = request.args.get('startRow')
@@ -53,7 +65,7 @@ class Data:
         column = request.form.get('column')
         self.pagination["startRow"] = None if startRowParam is None else int(startRowParam)
         self.pagination["endRow"]= None if endRowParam is None else int(endRowParam)
-        
+
     def setTypeHandler(self, request):
         _type = request.form.get('type')
         if _type in self.typesHandlers:
@@ -63,6 +75,19 @@ class Data:
             df = dataframeHandler.getDataframe()
             df[[column]] = df[[column]].astype(_type)
             dataframeHandler.saveDataframe(df)
+
+    def deleteRowHandler(self, request):
+        row = int(request.form.get('row'))
+        df = dataframeHandler.getDataframe()
+        df = df.drop(row)
+        df = df.reset_index(drop=True)
+        dataframeHandler.saveDataframe(df)
+
+    def deleteColumnHandler(self, request):
+        column = request.form.get('column')
+        df = dataframeHandler.getDataframe()
+        df.drop(column, axis=1, inplace=True)
+        dataframeHandler.saveDataframe(df)
 
     def setTypeFloatHandler(self, request):
         column = request.form.get('column')
@@ -76,7 +101,6 @@ class Data:
         df[column] = pd.to_numeric(df[column], errors='coerce')
         dataframeHandler.saveDataframe(df)
 
-        
     def updateCellHandler(self, request):
         column = request.form.get('column')
         row = int(request.form.get('row'))

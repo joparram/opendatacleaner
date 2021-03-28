@@ -13,7 +13,8 @@ from app.api import _v1
 from app.components._plugins import ImporterPlugins, ExporterPlugins, DatabaseExporterPlugins, ProcessorPlugin
 from app.controllers.processor import ProcessorController
 from app.controllers.importer import ImporterController
-from app.controllers.importer import ImporterController
+from app.controllers.database_exporter import DatabaseExporterController
+from app.controllers.exporter import ExporterController
 from app.controllers.components import ComponentesController
 from app.controllers.data import DataController
 from app.controllers.paginated_data import PaginatedDataController
@@ -25,7 +26,7 @@ api = Api(app)
 # Load plugins from plugin directory
 app.secret_key = 'super secret key'
 app.config['SESSION_TYPE'] = 'filesystem'
-CORS(app)
+CORS(app, expose_headers=["File-Name"])
 plugin_loader.load_plugins()
 
 @app.route("/")
@@ -36,6 +37,8 @@ api.add_resource(ProcessorController, '/processor')  # Route_1
 api.add_resource(ImporterController, '/importer')  # Route_1
 api.add_resource(ComponentesController, '/components')  # Route_1
 api.add_resource(PaginatedDataController, '/paginated_data')  # Route_1
+api.add_resource(DatabaseExporterController, '/database_exporter')  # Route_1
+api.add_resource(ExporterController, '/exporter')  # Route_1
 api.add_resource(DataController, '/data')  # Route_1
 
 @app.errorhandler(Error)

@@ -8,6 +8,7 @@ class Param:
     kind: Literal['file', 'string', 'number', 'boolean', 'select']
     name: str
     description: str = ""
+    default: str = None
     options: [str] = None
     required: bool = True
     id: str = uuid.uuid4().hex

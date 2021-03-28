@@ -3,5 +3,6 @@ export interface Param {
   kind: string;
   description: string;
   name: string;
+  default: string;
   required: string;
 }
