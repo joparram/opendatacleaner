@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 import { QuoteService } from './quote.service';
 import { ImportService } from '@app/@shared/services/import.service';
 import { DatabaseExporterService } from '@app/@shared/services/databaseexporter.service';
+import { ExporterService } from '@app/@shared/services/exporter.service';
 
 import { ProcessorService } from '@app/@shared/services/processor.service';
 import { MenuService } from '@app/@shared/services/menu.service';
@@ -50,7 +51,8 @@ export class HomeComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private paginateddataservice: PaginatedDataService,
     private dataService: DataService,
-    private databaseexporterService: DatabaseExporterService
+    private databaseexporterService: DatabaseExporterService,
+    private exporterService: ExporterService
   ) {
     this.menuService.menu$.subscribe((event) => {
       switch (event.action) {
@@ -67,6 +69,11 @@ export class HomeComponent implements OnInit {
         case 'data':
           this.dataService.get().subscribe((component: ActionComponent) => {
             this.dataDialog(component);
+          });
+          break;
+        case 'export':
+          this.exporterService.get().subscribe((component: ActionComponent) => {
+            this.exporterDialog(component);
           });
           break;
         case 'databaseexporter':
@@ -235,6 +242,26 @@ export class HomeComponent implements OnInit {
         this.databaseexporterService
           .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
           .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
+      }
+    });
+  }
+  private exporterDialog(component: ActionComponent) {
+    this.dialogRef = this.dialog.open(ActionDialogComponent, {
+      disableClose: false,
+    });
+    this.dialogRef.componentInstance.component = component;
+    this.dialogRef.afterClosed().subscribe((dataForm: any) => {
+      if (dataForm) {
+        dataForm.column = this.selectedColumn;
+        dataForm.row = this.selectedRow;
+        this.exporterService.post(dataForm, { startRow: this.minRow, endRow: this.maxRow }).subscribe((data: any) => {
+          const element = document.createElement('a');
+          element.href = URL.createObjectURL(data.file);
+          element.download = data.filename;
+          document.body.appendChild(element);
+          element.click();
+          document.body.removeChild(element);
+        });
       }
     });
   }
