@@ -15,8 +15,8 @@ componentDescription = "Importar datos al proyecto"
 componentInterfaceName = "Importar..."
 # Acciones que puede realizar el componente y parámetros que genera la interfaz
 Actions = [_v1.Action(
-                      name="default", 
-                      description="acción por defecto", 
+                      name="default",
+                      description="acción por defecto",
                       params=[
                           _v1.Param(name="file", kind="file"),
                       ])
@@ -36,14 +36,14 @@ class Importer:
             "startRow": None,
             "endRow": None,
         }
-        
+
     # Update pagination params from request
     def _updatePagination (self, request: any):
         startRowParam = request.args.get('startRow')
         endRowParam = request.args.get('endRow')
         self.pagination["startRow"] = None if startRowParam is None else int(startRowParam)
         self.pagination["endRow"]= None if endRowParam is None else int(endRowParam)
-        
+
     # handle csv files read and import into a dataframe
     def csvHandler (self, file: any):
         df = pd.read_csv(file)

@@ -6,37 +6,37 @@ import pandas as pd
 import numpy as np
 from app.components._data import dataframeHandler
 import json
+from io import StringIO, BytesIO
 
 # id del componente
-componentId = "databaseExporter"
+componentId = "exporter"
 # Nombre del componente
-componentName = "DatabaseExporter"
+componentName = "Exporter"
 # Descripción del componente
 componentDescription = "exportar datos a base de datos..."
 # Nombre de la opción en la interfaz
 componentInterfaceName = "Exportar..."
 # Acciones que puede realizar el componente y parámetros que genera la interfaz
 Actions = [_v1.Action(
-                      name="mongodb",
+                      name="csv",
                       description="acción por defecto",
                       params=[
-                          _v1.Param(name="connectionString", kind="string", default="mongodb://localhost:27017/"),
-                          _v1.Param(name="database", kind="string"),
-                          _v1.Param(name="collection", kind="string"),
+                          _v1.Param(name="filename", kind="string"),
                       ])
           ]
 ## Component importer
 ## This component handle the datasets import into the project
-class DatabaseExporter:
+class Exporter:
     # constructor which initialize handlers and defined actions
     def __init__(self):
         self.actions = {
-            "mongodb": self.mongodbHandler,
+            "csv": self.csvHandler,
         }
         self.pagination = {
             "startRow": None,
             "endRow": None,
         }
+        self.filedata = { 'file': None, 'mimetype': 'text/csv', 'filename': 'dataframe.csv' }
 
     # Update pagination params from request
     def _updatePagination (self, request: any):
@@ -47,17 +47,19 @@ class DatabaseExporter:
 
 
     # default application handle which allow to import files though file handlers
-    def mongodbHandler(self, request):
+    def csvHandler(self, request):
         df = dataframeHandler.getDataframe()
-        connectionString = request.form.get('connectionString')
-        database_name = request.form.get('database')
-        collection_name = request.form.get('collection')
 
-        client = pymongo.MongoClient(connectionString)
-        database = client[database_name]
-        collection = database[collection_name]
-        collection.insert_many(df.to_dict('records'))
-
+        filename = request.form.get('filename')
+        filebuffer = StringIO()
+        df.to_csv(filebuffer)
+        filemem = BytesIO()
+        filemem.write(filebuffer.getvalue().encode())
+        filemem.seek(0)
+        filebuffer.close()
+        self.filedata['file'] = filemem
+        self.filedata['mimetype'] = 'text/csv'
+        self.filedata['filename'] = filename
 
     # call function triggered
     def __call__(self, request: any):
@@ -70,8 +72,8 @@ class DatabaseExporter:
             raise Error('Accion {} desconocida'.format(action))
         else:
             self.actions[action](request)
-        return dataframeHandler.getAllData(self.pagination)
+        return self.filedata
 
 # component registration in the internal api
-component = _v1.Component(name=componentName, description=componentDescription, interfacename=componentInterfaceName, actions=Actions, handler_class=DatabaseExporter)
+component = _v1.Component(name=componentName, description=componentDescription, interfacename=componentInterfaceName, actions=Actions, handler_class=Exporter)
 _v1.register_component(component)
