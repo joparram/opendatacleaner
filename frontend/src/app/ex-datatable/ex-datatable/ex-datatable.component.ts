@@ -28,17 +28,14 @@ export class ExDatatableComponent implements OnInit {
     }
     console.log('menu: ' + this.menu);
   }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     if (!(event.target == document.getElementById('menu-btn'))) {
-      //if its not within given parent > hide it this way or set boolean
-      //variable that's bound to elements visibility property in template
-      console.log(event.target);
-      console.log(document.getElementById('menu-btn'));
-      console.log('entraaa');
       this.menu = null;
     }
   }
+
   onCellBlur() {
     this.cellStyle = 'ex-cell-default';
   }
