@@ -5,12 +5,13 @@
         <tr>
           <th *ngFor="let header of headers; let i = index">
             <button class="header-button">{{ header.name }}</button>
-            <button (click)="onMenuButtonClick()" class="header-menu-button"><i class="arrow down"></i></button>
+            <button (click)="onMenuButtonClick(i); $event.stopPropagation()" id="menu-btn" class="header-menu-button">
+              <i class="arrow down"></i>
+            </button>
             <div class="dropdown">
-              <div [style.display]="menu ? 'block' : 'none'" id="myDropdown" class="dropdown-content">
-                <a href="#home">Home</a>
-                <a href="#about">About</a>
-                <a href="#contact">Contact</a>
+              <div [style.display]="menu == i ? 'block' : 'none'" id="myDropdown" class="dropdown-content">
+                <a href="#type">Cambiar tipo</a>
+                <a href="#delete">Borrar columna</a>
               </div>
             </div>
           </th>

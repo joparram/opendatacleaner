@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Header } from '../models/header';
 
 @Component({
@@ -8,7 +8,7 @@ import { Header } from '../models/header';
 })
 export class ExDatatableComponent implements OnInit {
   cellStyle: string = 'ex-cell-default';
-  menu: boolean = false;
+  menu: number = null;
   @Input()
   headers: Header[] = [] as Header[];
 
@@ -20,8 +20,24 @@ export class ExDatatableComponent implements OnInit {
   onCellDoubleClick() {
     this.cellStyle = 'ex-cell-edit';
   }
-  onMenuButtonClick() {
-    this.menu = !this.menu;
+  onMenuButtonClick(i: number) {
+    if (this.menu == null) {
+      this.menu = i;
+    } else {
+      this.menu = null;
+    }
+    console.log('menu: ' + this.menu);
+  }
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!(event.target == document.getElementById('menu-btn'))) {
+      //if its not within given parent > hide it this way or set boolean
+      //variable that's bound to elements visibility property in template
+      console.log(event.target);
+      console.log(document.getElementById('menu-btn'));
+      console.log('entraaa');
+      this.menu = null;
+    }
   }
   onCellBlur() {
     this.cellStyle = 'ex-cell-default';
