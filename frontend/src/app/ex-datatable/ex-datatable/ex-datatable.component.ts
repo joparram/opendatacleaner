@@ -8,7 +8,7 @@ import { Header } from '../models/header';
 })
 export class ExDatatableComponent implements OnInit {
   cellStyle: string = 'ex-cell-default';
-
+  menu: boolean = false;
   @Input()
   headers: Header[] = [] as Header[];
 
@@ -20,7 +20,9 @@ export class ExDatatableComponent implements OnInit {
   onCellDoubleClick() {
     this.cellStyle = 'ex-cell-edit';
   }
-
+  onMenuButtonClick() {
+    this.menu = !this.menu;
+  }
   onCellBlur() {
     this.cellStyle = 'ex-cell-default';
   }

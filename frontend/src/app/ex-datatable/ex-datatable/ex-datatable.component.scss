@@ -1,18 +1,20 @@
 .container {
   display: block;
+  overflow-x: scroll;
   height: 100%;
-  overflow: scroll;
   padding: 0;
   margin: 0;
+  background: white;
+}
+.container .wrapper {
+  width: 0;
 }
 
 .ex-table {
   display: table;
-  border: 1px solid #f0f0f0;
+  border: none;
   border-collapse: separate;
   border-spacing: 0;
-  width: 100%;
-  height: 100%;
   padding: 0;
   margin: 0;
 }
@@ -21,32 +23,37 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  border: 1px solid #f0f0f0;
   height: 40px;
+  border-bottom: 1px solid #aaa;
   background: #f0f0f0;
+}
+
+.ex-table th .header-button {
+  border: none;
+  outline: none;
 }
 .ex-table th .header-menu-button {
   float: right;
   border: none;
   outline: none;
 }
-.ex-table th .header-name {
-  width: 12%;
-  height: 12%;
-  padding: 12px;
-}
+
+// .ex-table tr:nth-child(even) *{
+//   background: #fafafa;
+// }
+
 .ex-table td {
-  border: 1px solid #d0d0d0;
-  border-left: none;
-  border-right: none;
+  border-bottom: 1px solid #d0d0d0;
   height: 40px;
 }
+
 .ex-table td input {
-  height: 100%;
   width: 200px;
+  background-color: transparent;
   margin: 0;
-  padding: 0;
+  padding: 8px;
   border: none;
+  outline: none;
 }
 
 .ex-table td input:focus {
@@ -55,14 +62,17 @@
 }
 
 // cell dynamic styles
+
+.ex-table tr:focus-within {
+  background: rgba(33, 150, 243, 0.3);
+}
 .ex-cell-default:hover {
   cursor: cell;
 }
 
-.ex-cell-edit {
-  outline: none;
+.ex-cell-edit:focus {
+  background: white !important;
 }
-
 .ex-cell-edit:hover {
   cursor: text;
 }
@@ -78,4 +88,36 @@
 .down {
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
+}
+
+// dropdown
+.dropdown {
+  position: absolute;
+  bottom: 0;
+  left: 32px;
+}
+
+.dropdown-content {
+  display: block;
+  position: absolute;
+  background-color: #f1f1f1;
+  width: 160px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown a:hover {
+  background-color: #ddd;
+}
+
+.show {
+  display: block;
 }
