@@ -1,0 +1,77 @@
+.container {
+  display: block;
+  overflow-x: scroll;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  background: white;
+}
+
+.container .wrapper {
+  width: 0;
+}
+
+.ex-table {
+  display: table;
+  border: none;
+  border-collapse: separate;
+  border-spacing: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.ex-table thead tr th {
+  position: sticky;
+  top: 0;
+  height: 40px;
+  border-bottom: 1px solid #aaa;
+  background: #f0f0f0;
+}
+
+.ex-table th .header-button {
+  border: none;
+  outline: none;
+}
+.ex-table th .header-menu-button {
+  position: relative;
+  float: right;
+}
+
+// .ex-table tr:nth-child(even) *{
+//   background: #fafafa;
+// }
+
+.ex-table td {
+  border-bottom: 1px solid #d0d0d0;
+  height: 40px;
+}
+
+.ex-table td input {
+  width: 200px;
+  background-color: transparent;
+  margin: 0;
+  padding: 8px;
+  border: none;
+  outline: none;
+}
+
+.ex-table td input:focus {
+  outline-style: solid;
+  outline-color: #2196f3;
+}
+
+// cell dynamic styles
+
+.ex-table tr:focus-within {
+  background: rgba(33, 150, 243, 0.3);
+}
+.ex-cell-default:hover {
+  cursor: cell;
+}
+
+.ex-cell-edit:focus {
+  background: white !important;
+}
+.ex-cell-edit:hover {
+  cursor: text;
+}

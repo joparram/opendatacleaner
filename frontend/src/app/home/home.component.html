@@ -75,14 +75,19 @@
   </div>
 
   <div class="dataset">
-    <ag-grid-angular
+    <!-- <ag-grid-angular
       style="width: 100%; height: 100%"
       class="ag-theme-alpine"
       [gridOptions]="gridOptions"
       [columnDefs]="columnDefs"
       (gridReady)="onGridReady($event)"
       #grid
-    ></ag-grid-angular>
-    <!-- <ex-datatable style="width: 100%; height: 100%" ></ex-datatable> -->
+    ></ag-grid-angular> -->
+    <ex-datatable
+      [rows]="datatest"
+      [menuItems]="menuItems"
+      [headers]="headersPrueba"
+      style="width: 100%; height: 100%"
+    ></ex-datatable>
   </div>
 </div>
