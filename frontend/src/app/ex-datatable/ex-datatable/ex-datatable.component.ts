@@ -14,6 +14,9 @@ export class ExDatatableComponent implements OnInit {
   @Input()
   rows: any[] = [];
 
+  @Input()
+  menuItems: any[] = [];
+
   constructor() {}
 
   onCellDoubleClick() {

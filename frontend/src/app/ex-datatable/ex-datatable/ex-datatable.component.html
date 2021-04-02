@@ -5,7 +5,7 @@
         <tr>
           <th *ngFor="let header of headers; let i = index">
             <button class="header-button">{{ header.name }}</button>
-            <dropdown-button class="header-menu-button"></dropdown-button>
+            <dropdown-button [menuItems]="menuItems" class="header-menu-button"></dropdown-button>
           </th>
         </tr>
       </thead>

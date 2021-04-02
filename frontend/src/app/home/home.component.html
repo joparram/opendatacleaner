@@ -83,6 +83,11 @@
       (gridReady)="onGridReady($event)"
       #grid
     ></ag-grid-angular> -->
-    <ex-datatable [rows]="datatest" [headers]="headersPrueba" style="width: 100%; height: 100%"></ex-datatable>
+    <ex-datatable
+      [rows]="datatest"
+      [menuItems]="menuItems"
+      [headers]="headersPrueba"
+      style="width: 100%; height: 100%"
+    ></ex-datatable>
   </div>
 </div>

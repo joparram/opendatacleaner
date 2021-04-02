@@ -1,20 +1,18 @@
 <ul class="dropdown">
-  <li class="button" tabindex="0">
+  <li class="button" #menuBtn tabindex="1">
     <i class="arrow down"></i>
     <ul class="submenu-1">
-      <li>Layout</li>
-      <li>Input</li>
-      <li>
-        <div>Navigation</div>
-        <ul>
-          <li>Breadcrumb</li>
-          <li>Dropdown</li>
-          <li>Menu</li>
-          <li>Nested dropdown</li>
+      <li
+        *ngFor="let item of menuItems; let i = index"
+        (click)="item.menu === undefined && onClickMenuItem(item.function)"
+      >
+        <div>{{ item.title }}</div>
+        <ul *ngIf="item.menu !== undefined">
+          <li *ngFor="let menuItem of item.menu; let i = index" (click)="onClickMenuItem(menuItem.function)">
+            <div>{{ menuItem.title }}</div>
+          </li>
         </ul>
       </li>
-      <li>Display</li>
-      <li>Feedback</li>
     </ul>
   </li>
 </ul>

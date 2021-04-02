@@ -38,7 +38,26 @@ export class HomeComponent implements OnInit {
   minRow: number = 0;
   maxRow: number = 100;
   dataSubscription: Subscription = new Subscription();
-
+  menuItems: any[] = [
+    {
+      title: 'Cambiar Tipo',
+      menu: [
+        {
+          title: 'int',
+          function: () => console.log('hello world!'),
+        },
+        {
+          title: 'float',
+        },
+        {
+          title: 'string',
+        },
+      ],
+    },
+    {
+      title: 'Borrar Columna',
+    },
+  ];
   headersPrueba = [
     {
       name: '_id',
