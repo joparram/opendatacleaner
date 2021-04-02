@@ -8,7 +8,6 @@ import { Header } from '../models/header';
 })
 export class ExDatatableComponent implements OnInit {
   cellStyle: string = 'ex-cell-default';
-  menu: number = null;
   @Input()
   headers: Header[] = [] as Header[];
 
@@ -19,21 +18,6 @@ export class ExDatatableComponent implements OnInit {
 
   onCellDoubleClick() {
     this.cellStyle = 'ex-cell-edit';
-  }
-  onMenuButtonClick(i: number) {
-    if (this.menu == null) {
-      this.menu = i;
-    } else {
-      this.menu = null;
-    }
-    console.log('menu: ' + this.menu);
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    if (!(event.target == document.getElementById('menu-btn'))) {
-      this.menu = null;
-    }
   }
 
   onCellBlur() {
