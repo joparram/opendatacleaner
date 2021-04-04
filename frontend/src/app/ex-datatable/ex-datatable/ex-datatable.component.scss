@@ -1,3 +1,4 @@
+// https://stackoverflow.com/a/14834307
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -8,13 +9,17 @@
 
 .wrapper .container {
   overflow-x: scroll;
+  scroll-snap-type: mandatory;
+}
+
+.wrapper .container .container-dock {
+  width: 0;
 }
 
 .ex-table {
   border-collapse: separate;
   border-spacing: 0;
   border: none;
-  width: 0;
 }
 
 .ex-table thead tr th {
@@ -43,8 +48,8 @@
   width: 200px;
   margin: 0;
   padding: 8px;
-  border: none;
   background-color: transparent;
+  border: none;
   outline: none;
 }
 
@@ -54,7 +59,6 @@
 }
 
 // cell dynamic styles
-
 .ex-table tr:focus-within {
   background: rgba(33, 150, 243, 0.3);
 }
@@ -72,6 +76,7 @@
 .paginator {
   height: 72px;
   width: 100%;
+  border: 1px solid #888;
   background: #f0f0f0;
   border-bottom: 1px solid #aaa;
 }
