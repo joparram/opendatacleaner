@@ -5,7 +5,7 @@
       >&nbsp;&nbsp;&nbsp;</span
     >
     <button class="paginator-button" [disabled]="page === 1" (click)="first()"><<</button>
-    <button class="paginator-button" (click)="previous()"><</button>
+    <button class="paginator-button" (click)="previous()" [disabled]="page === 1"><</button>
     <span class="paginator-counter"
       >página <b>{{ page }}</b> de <b>{{ totalPages || 'indefinido' }}</b></span
     >
