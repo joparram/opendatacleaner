@@ -1,5 +1,6 @@
 .paginator {
   display: flex;
+  font-size: 12px;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
@@ -7,6 +8,7 @@
   width: 100%;
   border: 1px solid #888;
   border-bottom: 1px solid #aaa;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .paginator .paginator-controller {
