@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { Header } from '../models/header';
 
 @Component({
@@ -8,6 +8,7 @@ import { Header } from '../models/header';
 })
 export class ExDatatableComponent implements OnInit {
   cellStyle: string = 'ex-cell-default';
+
   @Input()
   headers: Header[] = [] as Header[];
 
@@ -17,6 +18,10 @@ export class ExDatatableComponent implements OnInit {
   @Input()
   menuItems: any[] = [];
 
+  @ViewChild('paginator') paginator: any;
+
+  index: number = 0;
+
   constructor() {}
 
   onCellDoubleClick() {
@@ -25,6 +30,11 @@ export class ExDatatableComponent implements OnInit {
 
   onCellBlur() {
     this.cellStyle = 'ex-cell-default';
+  }
+
+  onPageChange(event: any) {
+    this.index = event.pageIndex;
+    console.log('Se detecta en tabla');
   }
 
   onCellFocus() {}
