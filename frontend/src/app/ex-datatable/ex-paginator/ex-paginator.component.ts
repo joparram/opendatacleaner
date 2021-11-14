@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'ex-paginator',
@@ -6,16 +7,37 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ex-paginator.component.scss'],
 })
 export class ExPaginatorComponent implements OnInit {
-  blockSize: number = 100;
-  firstRow: number = 1;
-  lastRow: number = 100;
-  totalRows: number = undefined;
-  totalPages: number = undefined;
-  page: number = 1;
+  firstRow: number;
+
+  page: number;
+
+  pageChangeObserver: Observable<number>;
+
+  lastRow: number = undefined;
+
+  @Input() blockSize: number = 100;
+  @Input() totalRows: number = undefined;
+  @Input() totalPages: number = undefined;
+
+  @Output() pageChange = new EventEmitter<number>();
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.initialize();
+    this.pageChangeObserver = this.pageChange.asObservable();
+    this.pageChangeObserver.subscribe((_) => {
+      console.log('emitter');
+      this.calcFirstLastRows();
+    });
+  }
+
+  public initialize() {
+    this.firstRow = 1;
+    this.page = 1;
+    this.lastRow = this.page * this.blockSize;
+  }
+  // Function that is called when any attribute is changed
 
   calcFirstLastRows(): void {
     this.lastRow = this.page * this.blockSize;
@@ -30,24 +52,24 @@ export class ExPaginatorComponent implements OnInit {
     } else {
       this.page++;
     }
-    this.calcFirstLastRows();
+    this.pageChange.emit(this.page);
   }
 
   previous(): void {
     if (this.page > 1) {
       this.page--;
     }
-    this.calcFirstLastRows();
+    this.pageChange.emit(this.page);
   }
 
   first(): void {
     this.page = 1;
-    this.calcFirstLastRows();
+    this.pageChange.emit(this.page);
   }
   last(): void {
     if (this.totalPages !== undefined) {
       this.page = this.totalPages;
-      this.calcFirstLastRows();
+      this.pageChange.emit(this.page);
     }
   }
 }
