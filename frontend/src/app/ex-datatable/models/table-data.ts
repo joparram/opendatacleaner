@@ -1,15 +1,11 @@
-export interface TableData {
-  getRows(params: DataTableParams, callbacks: DataTableCallbacks): void;
+export interface EXTableDatasource {
+  getRows(params: EXDatasourceParams, success: Function, error: Function): void;
   onDestroy?(): void;
 }
 
-export interface DataTableCallbacks {
-  onSuccess(rows: any[]): void;
-}
-
-export interface DataTableParams {
+export interface EXDatasourceParams {
   page: number;
-  blocksize: number;
+  pageRows: number;
   firstRow?: number;
   lastRow?: number;
   totalRows?: number;

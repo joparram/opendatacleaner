@@ -5,13 +5,13 @@
         <thead>
           <tr>
             <th *ngFor="let header of headers; let i = index">
-              <button class="header-button">{{ header.name }}</button>
+              <button class="header-button">{{ header.headerName }}</button>
               <dropdown-button [menuItems]="menuItems" class="header-menu-button"></dropdown-button>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of rows; let i = index">
+          <tr *ngFor="let row of rowsReal; let i = index">
             <td *ngFor="let item of row | keyvalue; let i = index">
               <input
                 #input
@@ -28,6 +28,11 @@
       </table>
     </div>
   </div>
-  <ex-paginator #paginator (pageChange)="onPageChange($event)"></ex-paginator>
+  <ex-paginator
+    #paginator
+    [(datasourceParams)]="datasourceParams"
+    (datasourceParamsChange)="onPagination()"
+    class="paginator"
+  ></ex-paginator>
 </div>
 <!--container-->

@@ -16,6 +16,7 @@ import { DataService } from '@app/@shared/services/data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ActionComponent } from '@app/@shared/models/action-component';
 import { ActionDialogComponent } from '@shared/components/component-dialog/action-dialog.component';
+import { EXCallbackDatasource, EXDatasourceParams, EXTableDatasource } from '@app/ex-datatable/models/table-data';
 
 @Component({
   selector: 'app-home',
@@ -38,6 +39,7 @@ export class HomeComponent implements OnInit {
   minRow: number = 0;
   maxRow: number = 100;
   dataSubscription: Subscription = new Subscription();
+  datasource: EXTableDatasource;
 
   menuItems: any[] = [
     {
@@ -295,6 +297,21 @@ export class HomeComponent implements OnInit {
     private databaseexporterService: DatabaseExporterService,
     private exporterService: ExporterService
   ) {
+    this.datasource = {
+      getRows: (params: EXDatasourceParams, success, error) => {
+        this.dataSubscription.unsubscribe();
+        this.info = 'Getting datasource rows, start: ' + params.firstRow + ', end: ' + params.lastRow;
+        console.log(this.info);
+        this.dataSubscription = this.paginateddataservice.data$.subscribe((data: any) => {
+          this.rowData = data;
+          success(this.rowData);
+          this.ref.detectChanges();
+        });
+        this.paginateddataservice.get({ startRow: params.firstRow, endRow: params.lastRow }).subscribe((data: any) => {
+          this.paginateddataservice.updateDataEvents(data);
+        });
+      },
+    };
     this.menuService.menu$.subscribe((event) => {
       switch (event.action) {
         case 'import':
@@ -327,6 +344,7 @@ export class HomeComponent implements OnInit {
       }
     });
     this.paginateddataservice.columns$.subscribe((columns: any) => {
+      console.log('columnsssssssssssssssss');
       console.log(columns);
       this.columnDefs = columns;
     });
@@ -394,6 +412,7 @@ export class HomeComponent implements OnInit {
       .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
       .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
   }
+
   onGridReady(params: any) {
     console.log('onGridReady');
     var datasource = {

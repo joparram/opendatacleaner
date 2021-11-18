@@ -1,5 +1,5 @@
-export interface TableEvents {
-  getRows(params: TableEventsParams, callbacks: DataEventsCallbacks): void;
+export interface EXTableEvents {
+  getRows(params: EXTableEventsParams, callbacks: EXTableEventsCallbacks): void;
 
   onClickRow(row: any): void;
   onDoubleClickRow(row: any): void;
@@ -21,11 +21,11 @@ export interface TableEvents {
   onDestroy?(): void;
 }
 
-export interface DataEventsCallbacks {
+export interface EXTableEventsCallbacks {
   onSuccess(rows: any[]): void;
 }
 
-export interface TableEventsParams {
+export interface EXTableEventsParams {
   page: number;
   blocksize: number;
   firstRow?: number;

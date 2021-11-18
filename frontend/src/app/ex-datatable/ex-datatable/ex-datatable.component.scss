@@ -35,6 +35,8 @@
   border: none;
   outline: none;
   background-color: transparent;
+  width: 80%;
+  overflow-x: hidden;
 }
 .ex-table th .header-menu-button {
   position: relative;
@@ -74,4 +76,7 @@
 }
 .ex-cell-edit:hover {
   cursor: text;
+}
+
+.paginator {
 }
