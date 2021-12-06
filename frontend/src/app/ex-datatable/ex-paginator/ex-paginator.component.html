@@ -1,15 +1,26 @@
 <div class="paginator">
   <div class="paginator-controller">
     <span class="paginator-counter"
-      ><b>{{ firstRow }}</b> a <b>{{ lastRow }}</b> de <b>{{ totalPages || 'indefinido' }}</b
+      ><b>{{ datasourceParams?.firstRow }}</b> a <b>{{ datasourceParams?.lastRow }}</b> de
+      <b>{{ this.datasourceParams?.totalPages || 'indefinido' }}</b
       >&nbsp;&nbsp;&nbsp;</span
     >
-    <button class="paginator-button" [disabled]="page === 1" (click)="first()"><<</button>
-    <button class="paginator-button" (click)="previous()" [disabled]="page === 1"><</button>
+    <button class="paginator-button" [disabled]="datasourceParams?.page === 1" (click)="this.paginatorIndex.first()">
+      <<
+    </button>
+    <button class="paginator-button" (click)="this.paginatorIndex.previous()" [disabled]="datasourceParams?.page === 1">
+      <
+    </button>
     <span class="paginator-counter"
-      >página <b>{{ page }}</b> de <b>{{ totalPages || 'indefinido' }}</b></span
+      >página <b>{{ datasourceParams?.page }}</b> de <b>{{ datasourceParams?.totalPages || 'indefinido' }}</b></span
     >
-    <button class="paginator-button" (click)="next()">></button>
-    <button class="paginator-button" [disabled]="totalPages === undefined" (click)="last()">>></button>
+    <button class="paginator-button" (click)="this.paginatorIndex.next()">></button>
+    <button
+      class="paginator-button"
+      [disabled]="datasourceParams?.totalPages === undefined"
+      (click)="this.paginatorIndex.last()"
+    >
+      >>
+    </button>
   </div>
 </div>

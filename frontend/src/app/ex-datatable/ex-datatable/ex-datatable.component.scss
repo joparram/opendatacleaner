@@ -1,4 +1,8 @@
 // https://stackoverflow.com/a/14834307
+
+input {
+  cursor: default;
+}
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -35,6 +39,8 @@
   border: none;
   outline: none;
   background-color: transparent;
+  width: 80%;
+  overflow-x: hidden;
 }
 .ex-table th .header-menu-button {
   position: relative;
@@ -44,12 +50,14 @@
 
 .ex-table td {
   height: 40px;
+  padding: 0;
   border-bottom: 1px solid #d0d0d0;
 }
 
 .ex-table td input {
   width: 200px;
   margin: 0;
+  height: 100%;
   padding: 8px;
   background-color: transparent;
   border: none;
@@ -59,19 +67,35 @@
 .ex-table td input:focus {
   outline-style: solid;
   outline-color: #2196f3;
+  outline-width: 1px;
 }
 
 // cell dynamic styles
 .ex-table tr:focus-within {
-  background: rgba(33, 150, 243, 0.3);
+  background: #BCDFFB !important;
 }
-.ex-cell-default:hover {
-  cursor: cell;
+
+.ex-table tr:hover {
+  background: rgba(33, 150, 243, 0.09);
 }
 
 .ex-cell-edit:focus {
   background: white !important;
 }
-.ex-cell-edit:hover {
-  cursor: text;
+
+.ex-cell-edit:focus input {
+  background: white !important;
 }
+
+.dropdown {
+  background-color: red !important;
+}
+
+// fix latest menu overflow
+:host ::ng-deep th:last-child dropdown-button ul ul {
+  right: 100% !important;
+  left: auto !important;
+  position: absolute;
+  top: 0;
+}
+

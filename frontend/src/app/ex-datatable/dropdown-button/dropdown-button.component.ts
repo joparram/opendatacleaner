@@ -3,8 +3,7 @@ import { Component, ElementRef, HostListener, Input, OnInit, ViewChild, ViewEnca
 @Component({
   selector: 'dropdown-button',
   templateUrl: './dropdown-button.component.html',
-  styleUrls: ['./dropdown-button.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./dropdown-button.component.scss']
 })
 export class DropdownButtonComponent implements OnInit {
   visible: boolean = false;

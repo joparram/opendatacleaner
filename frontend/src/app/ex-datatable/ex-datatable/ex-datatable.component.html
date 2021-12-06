@@ -5,22 +5,24 @@
         <thead>
           <tr>
             <th *ngFor="let header of headers; let i = index">
-              <button class="header-button">{{ header.name }}</button>
+              <button class="header-button">{{ header.headerName }}</button>
               <dropdown-button [menuItems]="menuItems" class="header-menu-button"></dropdown-button>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of rows; let i = index">
-            <td *ngFor="let item of row | keyvalue; let i = index">
+          <tr *ngFor="let row of rowsReal; let x = index">
+            <td *ngFor="let item of row | keyvalue; let y = index;">
               <input
                 #input
+                (focus)="onCellFocus(buildCell(row, x, y))"
                 [ngClass]="[cellStyle]"
+                (change)="onCellChanges(buildCell(row, x, y))"
                 [readonly]="cellStyle == 'ex-cell-default'"
                 (dblclick)="onCellDoubleClick(); input.select()"
                 (blur)="onCellBlur()"
                 type="text"
-                value="{{ row[headers[i].field] }}"
+                value="{{ row[headers[y].field] }}"
               />
             </td>
           </tr>
@@ -28,6 +30,11 @@
       </table>
     </div>
   </div>
-  <ex-paginator #paginator (pageChange)="onPageChange($event)"></ex-paginator>
+  <ex-paginator
+    #paginator
+    [(datasourceParams)]="datasourceParams"
+    (datasourceParamsChange)="onPagination()"
+    class="paginator"
+  ></ex-paginator>
 </div>
 <!--container-->

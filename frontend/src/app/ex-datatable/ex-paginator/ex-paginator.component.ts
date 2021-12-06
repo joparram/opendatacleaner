@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { EXDatasourceParams } from '../models/table-data';
 
 @Component({
   selector: 'ex-paginator',
@@ -7,69 +8,78 @@ import { Observable, Subject } from 'rxjs';
   styleUrls: ['./ex-paginator.component.scss'],
 })
 export class ExPaginatorComponent implements OnInit {
-  firstRow: number;
+  paginatorIndex: ExPaginatorIndex;
+  paginatorIndexSubscription: Subscription;
 
-  page: number;
-
-  pageChangeObserver: Observable<number>;
-
-  lastRow: number = undefined;
-
-  @Input() blockSize: number = 100;
-  @Input() totalRows: number = undefined;
-  @Input() totalPages: number = undefined;
-
-  @Output() pageChange = new EventEmitter<number>();
+  @Input() datasourceParams: EXDatasourceParams;
+  @Output() datasourceParamsChange = new EventEmitter<EXDatasourceParams>();
 
   constructor() {}
 
   ngOnInit(): void {
     this.initialize();
-    this.pageChangeObserver = this.pageChange.asObservable();
-    this.pageChangeObserver.subscribe((_) => {
-      console.log('emitter');
-      this.calcFirstLastRows();
+  }
+
+  initialize() {
+    this.paginatorIndex = new ExPaginatorIndex(this.datasourceParams?.totalPages);
+    if (this.paginatorIndexSubscription) {
+      this.paginatorIndexSubscription.unsubscribe();
+    }
+    this.paginatorIndexSubscription = this.paginatorIndex.page$.subscribe((page) => {
+      if (this.datasourceParams) {
+        this.datasourceParams.page = page;
+        this.datasourceParams.lastRow = this.datasourceParams.page * this.datasourceParams.pageRows;
+        this.datasourceParams.firstRow = (this.datasourceParams.page - 1) * this.datasourceParams.pageRows + 1;
+        this.datasourceParamsChange.emit(this.datasourceParams);
+      }
     });
   }
+}
 
-  public initialize() {
-    this.firstRow = 1;
-    this.page = 1;
-    this.lastRow = this.page * this.blockSize;
-  }
-  // Function that is called when any attribute is changed
+class ExPaginatorIndex {
+  private page = new BehaviorSubject<number>(1);
+  page$: Observable<number> = this.page.asObservable();
+  totalPages: number;
 
-  calcFirstLastRows(): void {
-    this.lastRow = this.page * this.blockSize;
-    this.firstRow = (this.page - 1) * this.blockSize + 1;
+  constructor(totalPages: number) {
+    this.totalPages = totalPages;
   }
 
-  next(): void {
+  public get(): number {
+    return this.page.getValue();
+  }
+
+  public set(page: number): void {
+    this.page.next(page);
+  }
+
+  public next(): void {
+    let _page = this.page.getValue();
     if (this.totalPages !== undefined) {
-      if (this.page < this.totalPages) {
-        this.page++;
+      if (_page < this.totalPages) {
+        _page++;
       }
     } else {
-      this.page++;
+      _page++;
     }
-    this.pageChange.emit(this.page);
+    this.page.next(_page);
   }
 
-  previous(): void {
-    if (this.page > 1) {
-      this.page--;
+  public previous(): void {
+    let _page = this.page.getValue();
+    if (_page > 1) {
+      _page--;
     }
-    this.pageChange.emit(this.page);
+    this.page.next(_page);
   }
 
-  first(): void {
-    this.page = 1;
-    this.pageChange.emit(this.page);
+  public first(): void {
+    this.page.next(1);
   }
-  last(): void {
+
+  public last(): void {
     if (this.totalPages !== undefined) {
-      this.page = this.totalPages;
-      this.pageChange.emit(this.page);
+      this.page.next(this.totalPages);
     }
   }
 }
