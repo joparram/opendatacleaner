@@ -11,16 +11,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of rowsReal; let i = index">
-            <td *ngFor="let item of row | keyvalue; let i = index">
+          <tr *ngFor="let row of rowsReal; let x = index">
+            <td *ngFor="let item of row | keyvalue; let y = index;">
               <input
                 #input
+                (focus)="onCellFocus(buildCell(row, x, y))"
                 [ngClass]="[cellStyle]"
+                (change)="onCellChanges(buildCell(row, x, y))"
                 [readonly]="cellStyle == 'ex-cell-default'"
                 (dblclick)="onCellDoubleClick(); input.select()"
                 (blur)="onCellBlur()"
                 type="text"
-                value="{{ row[headers[i].field] }}"
+                value="{{ row[headers[y].field] }}"
               />
             </td>
           </tr>

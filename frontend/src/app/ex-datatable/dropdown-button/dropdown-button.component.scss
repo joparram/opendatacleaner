@@ -1,6 +1,6 @@
 .dropdown {
   /* Border */
-  border: 2px solid rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.3);
   display: flex;
 
   /* Reset list styles */
@@ -39,7 +39,7 @@
   display: none;
 
   /* Absolute position */
-  left: 0;
+  right: 0;
   position: absolute;
   top: 100%;
 
@@ -72,7 +72,7 @@
 /* dropdown button icon */
 .arrow {
   border: solid black;
-  border-width: 0 3px 3px 0;
+  border-width: 0 2px 2px 0;
   display: inline-block;
   padding: 3px;
 }

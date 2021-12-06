@@ -10,6 +10,12 @@ import {
 } from '@angular/core';
 import { Header } from '../models/header';
 import { EXDatasourceParams, EXTableDatasource } from '../models/table-data';
+import { EXTableEvents, Cell} from '../models/table-events';
+
+export enum KEY_CODE {
+  ENTER = 'Enter',
+}
+
 @Component({
   selector: 'ex-datatable',
   templateUrl: './ex-datatable.component.html',
@@ -26,6 +32,9 @@ export class ExDatatableComponent implements OnInit, OnChanges {
     firstRow: 1,
     lastRow: 50,
   };
+
+  @Input()
+  events: EXTableEvents;
 
   @Input()
   headers: Header[] = [] as Header[];
@@ -45,21 +54,28 @@ export class ExDatatableComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    console.log('holaaaa');
-    console.log(this.headers);
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('holaaaa ngOnChanges');
-    console.log(this.headers);
     this.ref.detectChanges();
   }
+
+  onCellFocus(cell : Cell) {
+
+  }
+
   onCellDoubleClick() {
     this.cellStyle = 'ex-cell-edit';
   }
 
   onCellBlur() {
     this.cellStyle = 'ex-cell-default';
+  }
+
+  onCellChanges(cell : Cell) {
+    console.log(cell);
+    this.events?.onEditCell(cell);
   }
 
   onPagination() {
@@ -74,5 +90,26 @@ export class ExDatatableComponent implements OnInit, OnChanges {
     );
   }
 
-  onCellFocus() {}
+  buildCell(row: any, x: number,  y: number) {
+    const cell: Cell = {
+      columnName: this.headers[y].field,
+      value: row[this.headers[y].field],
+      x: x + 1,
+      y: y + 1,
+    }
+    return cell;
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    console.log(event);
+    if (event.key === KEY_CODE.ENTER) {
+      let _event = event.target as any;
+      if (_event?.tagName === 'INPUT') {
+        _event?.blur();
+        _event?.focus();
+      }
+    }
+  }
+
 }
