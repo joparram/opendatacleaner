@@ -76,11 +76,14 @@ export class HomeComponent implements OnInit {
     private databaseexporterService: DatabaseExporterService,
     private exporterService: ExporterService
   ) {
+
     this.datasource = {
       getRows: (params: EXDatasourceParams, success, error) => {
         this.dataSubscription.unsubscribe();
         this.info = 'Getting datasource rows, start: ' + params.firstRow + ', end: ' + params.lastRow;
+        console.log(this.info)
         this.dataSubscription = this.paginateddataservice.data$.subscribe((data: any) => {
+          console.log("dataSubscription")
           this.rowData = data;
           success(this.rowData);
           this.ref.detectChanges();
@@ -90,6 +93,7 @@ export class HomeComponent implements OnInit {
         });
       },
     };
+
     this.menuService.menu$.subscribe((event) => {
       switch (event.action) {
         case 'import':
@@ -144,8 +148,13 @@ export class HomeComponent implements OnInit {
 
     this.gridEvents = {
       onEditCell: (cell: Cell) => {
+        console.log("onEditCell")
         this.neWupdateCellValue(cell)
-      }
+      },
+      onFocusCell: (cell: Cell) => {
+        this.selectedColumn = cell.columnName;
+        this.selectedRow = cell.x;
+      },
     }
 
     this.gridOptions = {
@@ -171,11 +180,13 @@ export class HomeComponent implements OnInit {
       },
     };
   }
+
   getSelectedColumnType() {
     if (this.types != undefined) {
       return this.types[this.selectedColumn];
     }
   }
+
 
   click(event: any) {
     this.menuService.updateMenuEvents(event);
@@ -187,6 +198,7 @@ export class HomeComponent implements OnInit {
       action: 'updateCell',
       value: e.value,
     };
+    console.log(dataForm)
     this.dataService
       .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
       .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
@@ -200,6 +212,7 @@ export class HomeComponent implements OnInit {
       action: 'updateCell',
       value: cell.value,
     };
+    console.log(dataForm)
     this.dataService
       .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
       .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));

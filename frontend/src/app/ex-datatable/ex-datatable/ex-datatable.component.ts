@@ -1,10 +1,12 @@
 import {
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   HostListener,
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -25,6 +27,7 @@ export class ExDatatableComponent implements OnInit, OnChanges {
   cellStyle: string = 'ex-cell-default';
 
   @Input() datasource: EXTableDatasource;
+  @Output() onTableInit: EventEmitter<any> = new EventEmitter();
 
   datasourceParams: EXDatasourceParams = {
     page: 1,
@@ -54,7 +57,7 @@ export class ExDatatableComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-
+    this.onTableInit.emit();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -62,7 +65,9 @@ export class ExDatatableComponent implements OnInit, OnChanges {
   }
 
   onCellFocus(cell : Cell) {
-
+    if (this.events?.onFocusCell) {
+      this.events?.onFocusCell(cell);
+    }
   }
 
   onCellDoubleClick() {
@@ -74,26 +79,27 @@ export class ExDatatableComponent implements OnInit, OnChanges {
   }
 
   onCellChanges(cell : Cell) {
-    console.log(cell);
     this.events?.onEditCell(cell);
   }
 
   onPagination() {
-    this.datasource.getRows(
-      this.datasourceParams,
-      (data: any) => {
-        this.rowsReal = data;
-      },
-      (error: any) => {
-        console.log(error);
-      }
-    );
+    setTimeout(() => {
+      this.datasource.getRows(
+        this.datasourceParams,
+        (data: any) => {
+          this.rowsReal = data;
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+    }, 0);
   }
 
-  buildCell(row: any, x: number,  y: number) {
+  buildCellFromEvent(value: any, x: number,  y: number) {
     const cell: Cell = {
       columnName: this.headers[y].field,
-      value: row[this.headers[y].field],
+      value: value,
       x: x + 1,
       y: y + 1,
     }
@@ -102,7 +108,6 @@ export class ExDatatableComponent implements OnInit, OnChanges {
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    console.log(event);
     if (event.key === KEY_CODE.ENTER) {
       let _event = event.target as any;
       if (_event?.tagName === 'INPUT') {
