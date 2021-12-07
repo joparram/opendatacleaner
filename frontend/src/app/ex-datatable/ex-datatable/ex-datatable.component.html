@@ -15,9 +15,9 @@
             <td *ngFor="let item of row | keyvalue; let y = index;">
               <input
                 #input
-                (focus)="onCellFocus(buildCell(row, x, y))"
+                (focus)="onCellFocus(buildCellFromEvent($event.srcElement.value, x, y))"
                 [ngClass]="[cellStyle]"
-                (change)="onCellChanges(buildCell(row, x, y))"
+                (change)="onCellChanges(buildCellFromEvent($event.srcElement.value, x, y))"
                 [readonly]="cellStyle == 'ex-cell-default'"
                 (dblclick)="onCellDoubleClick(); input.select()"
                 (blur)="onCellBlur()"

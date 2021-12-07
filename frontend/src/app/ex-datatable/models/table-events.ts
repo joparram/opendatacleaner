@@ -11,7 +11,7 @@ export interface EXTableEvents {
   onEditColumn?(column: Column): void;
   onDeleteColumn?(column: Column): void;
 
-  onClickCell?(cell: Cell): void;
+  onFocusCell?(cell: Cell): void;
   onDoubleClickCell?(cell: Cell): void;
   onSelectCell?(cell: Cell): void;
   onEditCell?(cell: Cell): void;

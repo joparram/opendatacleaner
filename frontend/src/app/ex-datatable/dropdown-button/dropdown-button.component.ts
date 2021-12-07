@@ -13,7 +13,6 @@ export class DropdownButtonComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log(this.menuItems);
   }
 
   onClickMenuItem(fun: Function) {
