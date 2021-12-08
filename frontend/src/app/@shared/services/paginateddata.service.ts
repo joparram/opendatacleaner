@@ -13,10 +13,12 @@ export class PaginatedDataService {
   private datasource = new Subject<any>();
   private columnssource = new Subject<any>();
   private typessource = new Subject<any>();
+  private fulldata = new Subject<any>();
 
   data$ = this.datasource.asObservable();
   columns$ = this.columnssource.asObservable();
   types$ = this.typessource.asObservable();
+  fulldata$ =this.fulldata.asObservable();
 
   constructor(private httpClient: HttpClient) {}
 
@@ -24,6 +26,7 @@ export class PaginatedDataService {
     this.datasource.next(e.data);
     this.columnssource.next(e.columns);
     this.typessource.next(e.types);
+    this.fulldata.next(e);
   }
 
   get(pagination: Pagination): Observable<PaginatedData> {

@@ -26,28 +26,28 @@ export enum KEY_CODE {
 export class ExDatatableComponent implements OnInit, OnChanges {
   cellStyle: string = 'ex-cell-default';
 
-  @Input() datasource: EXTableDatasource;
-  @Output() onTableInit: EventEmitter<any> = new EventEmitter();
+
+  @Output() onTableInit: EventEmitter<EXDatasourceParams> = new EventEmitter<EXDatasourceParams>();
 
   datasourceParams: EXDatasourceParams = {
     page: 1,
     pageRows: 50,
     firstRow: 1,
     lastRow: 50,
+    readyData: this.fillTable.bind(this),
+    setDatasource: this.setDatasource.bind(this)
   };
 
   @Input()
   events: EXTableEvents;
 
   @Input()
-  headers: Header[] = [] as Header[];
-
-  @Input()
   menuItems: any[] = [];
 
-  @Input()
+  datasource: EXTableDatasource;
   rows: any[] = [];
-  rowsReal: any[] = [];
+  headers: Header[] = [] as Header[];
+
   @ViewChild('paginator') paginator: any;
 
   constructor(private ref: ChangeDetectorRef) {}
@@ -56,8 +56,13 @@ export class ExDatatableComponent implements OnInit, OnChanges {
     this.datasource = datasource;
   }
 
+  fillTable(rows: any, headers: Header[]) {
+    this.headers = headers;
+    this.rows = rows;
+  }
+
   ngOnInit(): void {
-    this.onTableInit.emit();
+    this.onTableInit.emit(this.datasourceParams);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -82,17 +87,10 @@ export class ExDatatableComponent implements OnInit, OnChanges {
     this.events?.onEditCell(cell);
   }
 
+
   onPagination() {
     setTimeout(() => {
-      this.datasource.getRows(
-        this.datasourceParams,
-        (data: any) => {
-          this.rowsReal = data;
-        },
-        (error: any) => {
-          console.log(error);
-        }
-      );
+      this.datasource?.getData(this.datasourceParams);
     }, 0);
   }
 
@@ -100,7 +98,7 @@ export class ExDatatableComponent implements OnInit, OnChanges {
     const cell: Cell = {
       columnName: this.headers[y].field,
       value: value,
-      x: x + 1,
+      x: x,
       y: y + 1,
     }
     return cell;

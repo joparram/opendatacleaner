@@ -1,6 +1,5 @@
 export interface EXTableDatasource {
-  getRows(params: EXDatasourceParams, success: Function, error: Function): void;
-  onDestroy?(): void;
+  getData(params: EXDatasourceParams): void;
 }
 
 export interface EXDatasourceParams {
@@ -10,4 +9,6 @@ export interface EXDatasourceParams {
   lastRow?: number;
   totalRows?: number;
   totalPages?: number;
+  readyData?: Function;
+  setDatasource?: Function;
 }
