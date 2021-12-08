@@ -104,6 +104,10 @@ export class ExDatatableComponent implements OnInit, OnChanges {
     return cell;
   }
 
+  openContextMenu(event: any) {
+    event.preventDefault();
+  }
+
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     if (event.key === KEY_CODE.ENTER) {
