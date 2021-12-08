@@ -124,6 +124,8 @@ export class HomeComponent implements OnInit {
   onInitTable(params: EXDatasourceParams) {
     let datasource = {
       getData: (params: EXDatasourceParams) => {
+          this.minRow = params.firstRow;
+          this.maxRow = params.lastRow;
           this.dataSubscription.unsubscribe();
           this.dataSubscription = this.paginateddataservice.fulldata$.subscribe((data: any) => {
             params.readyData(data.data, data.columns);

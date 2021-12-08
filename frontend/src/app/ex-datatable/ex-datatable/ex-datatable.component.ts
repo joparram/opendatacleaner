@@ -98,8 +98,8 @@ export class ExDatatableComponent implements OnInit, OnChanges {
     const cell: Cell = {
       columnName: this.headers[y].field,
       value: value,
-      x: x,
-      y: y + 1,
+      x: x + ((this.datasourceParams.page - 1) * this.datasourceParams.pageRows) + 1,
+      y: y,
     }
     return cell;
   }
