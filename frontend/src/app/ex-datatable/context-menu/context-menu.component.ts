@@ -27,19 +27,17 @@ export class ContextMenuComponent implements OnInit {
 
   rightClick(e: any) {
     e.preventDefault();
-    var menu = document.getElementById("contextMenu")
-    menu.style.display = 'block';
-    menu.style.left = e.pageX  + "px";
-    menu.style.top = e.layerY + "px";
+    this.contextmenu.nativeElement.style.display = 'block';
+    this.contextmenu.nativeElement.style.left = e.clientX + 'px';
+    this.contextmenu.nativeElement.style.top = e.clientY + 'px';
   }
 
 
   hideMenu() {
-      document.getElementById("contextMenu").style.display = "none"
+    this.contextmenu.nativeElement.style.display = 'none';
   }
 
   onClickMenuItem(fun: Function) {
-    console.log("onClickMenuItem");
     if (fun !== undefined) {
       fun();
     }
