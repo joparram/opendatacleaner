@@ -1,0 +1,83 @@
+.dropdown {
+  /* Border */
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  display: flex;
+
+  /* Reset list styles */
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+.dropdown .button {
+  padding: 0px;
+  width: 20px;
+  height: 20px;
+}
+.dropdown .button:focus > ul {
+  display: block;
+}
+
+.dropdown .button .submenu-1 {
+  padding-top: 11px;
+}
+.dropdown li {
+  /* Spacing */
+  padding: 8px;
+  background-color: #f1f1f1;
+  /* Used to position the sub dropdown */
+  position: relative;
+  cursor: default;
+}
+
+/* The sub dropdown */
+.dropdown ul {
+  /* Border */
+
+  /* Hidden by default */
+  display: none;
+
+  /* Absolute position */
+  right: 0;
+  position: absolute;
+  top: 100%;
+
+  /* Reset styles */
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+  /* Width */
+  width: 200px;
+}
+
+/* The second level sub dropdown */
+.dropdown ul ul {
+  left: 100%;
+  position: absolute;
+  top: 0;
+}
+
+/* Change background color of list item when being hovered */
+.dropdown li:hover {
+  background-color: #ddd;
+}
+
+/* Show the direct sub dropdown when hovering the list item */
+.dropdown li:not(.button):hover > ul {
+  display: block;
+}
+
+/* dropdown button icon */
+.arrow {
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}

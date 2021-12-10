@@ -1,0 +1,26 @@
+<div class="paginator">
+  <div class="paginator-controller">
+    <span class="paginator-counter"
+      ><b>{{ datasourceParams?.firstRow }}</b> a <b>{{ datasourceParams?.lastRow }}</b> de
+      <b>{{ this.datasourceParams?.totalPages || 'indefinido' }}</b
+      >&nbsp;&nbsp;&nbsp;</span
+    >
+    <button class="paginator-button" [disabled]="datasourceParams?.page === 1" (click)="this.paginatorIndex.first()">
+      <<
+    </button>
+    <button class="paginator-button" (click)="this.paginatorIndex.previous()" [disabled]="datasourceParams?.page === 1">
+      <
+    </button>
+    <span class="paginator-counter"
+      >página <b>{{ datasourceParams?.page }}</b> de <b>{{ datasourceParams?.totalPages || 'indefinido' }}</b></span
+    >
+    <button class="paginator-button" (click)="this.paginatorIndex.next()">></button>
+    <button
+      class="paginator-button"
+      [disabled]="datasourceParams?.totalPages === undefined"
+      (click)="this.paginatorIndex.last()"
+    >
+      >>
+    </button>
+  </div>
+</div>

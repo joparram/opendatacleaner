@@ -1,0 +1,101 @@
+// https://stackoverflow.com/a/14834307
+
+input {
+  cursor: default;
+}
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  height: 100%;
+  overflow: hidden;
+}
+
+.wrapper .container {
+  overflow-x: scroll;
+  scroll-snap-type: mandatory;
+}
+
+.wrapper .container .container-dock {
+  width: 0;
+}
+
+.ex-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: none;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.ex-table thead tr th {
+  height: 40px;
+  position: sticky;
+  top: 0;
+  background: #f0f0f0;
+  border-bottom: 1px solid #aaa;
+}
+
+.ex-table th .header-button {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  width: 80%;
+  overflow-x: hidden;
+}
+.ex-table th .header-menu-button {
+  position: relative;
+  float: right;
+  background-color: transparent;
+}
+
+.ex-table td {
+  height: 40px;
+  padding: 0;
+  border-bottom: 1px solid #d0d0d0;
+}
+
+.ex-table td input {
+  width: 200px;
+  margin: 0;
+  height: 100%;
+  padding: 8px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.ex-table td input:focus {
+  outline-style: solid;
+  outline-color: #2196f3;
+  outline-width: 1px;
+}
+
+// cell dynamic styles
+.ex-table tr:focus-within {
+  background: #BCDFFB !important;
+}
+
+.ex-table tr:hover {
+  background: rgba(33, 150, 243, 0.09);
+}
+
+.ex-cell-edit:focus {
+  background: white !important;
+}
+
+.ex-cell-edit:focus input {
+  background: white !important;
+}
+
+.dropdown {
+  background-color: red !important;
+}
+
+// fix latest menu overflow
+:host ::ng-deep th:last-child dropdown-button ul ul {
+  right: 100% !important;
+  left: auto !important;
+  position: absolute;
+  top: 0;
+}
+

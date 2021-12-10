@@ -10,7 +10,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { ImportService } from '@shared/services/import.service';
 import { ImportDialogComponent } from './import-dialog/import-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { ExDatatableModule } from '@app/ex-datatable/ex-datatable.module';
 @NgModule({
   imports: [
     CommonModule,
@@ -22,6 +22,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     AgGridModule.withComponents([]),
     FormsModule,
     ReactiveFormsModule,
+    ExDatatableModule,
   ],
   declarations: [HomeComponent, ImportDialogComponent],
   providers: [ImportService],

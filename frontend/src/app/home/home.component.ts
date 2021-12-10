@@ -16,12 +16,13 @@ import { DataService } from '@app/@shared/services/data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ActionComponent } from '@app/@shared/models/action-component';
 import { ActionDialogComponent } from '@shared/components/component-dialog/action-dialog.component';
+import {  EXDatasourceParams, EXTableDatasource } from '@app/ex-datatable/models/table-data';
+import { Cell, EXTableEvents} from '@app/ex-datatable/models/table-events';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent implements OnInit {
   quote: string | undefined;
@@ -39,7 +40,28 @@ export class HomeComponent implements OnInit {
   minRow: number = 0;
   maxRow: number = 100;
   dataSubscription: Subscription = new Subscription();
-
+  datasource: EXTableDatasource;
+  gridEvents: EXTableEvents;
+  menuItems: any[] = [
+    {
+      title: 'Cambiar Tipo',
+      menu: [
+        {
+          title: 'int',
+          function: () => console.log('hello world!'),
+        },
+        {
+          title: 'float',
+        },
+        {
+          title: 'string',
+        },
+      ],
+    },
+    {
+      title: 'Borrar Columna',
+    },
+  ];
   @ViewChild('grid') grid: AgGridAngular;
 
   constructor(
@@ -54,6 +76,24 @@ export class HomeComponent implements OnInit {
     private databaseexporterService: DatabaseExporterService,
     private exporterService: ExporterService
   ) {
+
+    this.datasource = {
+      getRows: (params: EXDatasourceParams, success, error) => {
+        this.dataSubscription.unsubscribe();
+        this.info = 'Getting datasource rows, start: ' + params.firstRow + ', end: ' + params.lastRow;
+        console.log(this.info)
+        this.dataSubscription = this.paginateddataservice.data$.subscribe((data: any) => {
+          console.log("dataSubscription")
+          this.rowData = data;
+          success(this.rowData);
+          this.ref.detectChanges();
+        });
+        this.paginateddataservice.get({ startRow: params.firstRow, endRow: params.lastRow }).subscribe((data: any) => {
+          this.paginateddataservice.updateDataEvents(data);
+        });
+      },
+    };
+
     this.menuService.menu$.subscribe((event) => {
       switch (event.action) {
         case 'import':
@@ -89,11 +129,9 @@ export class HomeComponent implements OnInit {
       this.columnDefs = columns;
     });
     this.paginateddataservice.data$.subscribe((data: any) => {
-      console.log(data);
     });
     this.paginateddataservice.types$.subscribe((types: any) => {
       this.types = types;
-      console.log(this.types);
     });
     this.rowFunctions = [
       {
@@ -108,13 +146,24 @@ export class HomeComponent implements OnInit {
       },
     ];
 
+    this.gridEvents = {
+      onEditCell: (cell: Cell) => {
+        console.log("onEditCell")
+        this.neWupdateCellValue(cell)
+      },
+      onFocusCell: (cell: Cell) => {
+        this.selectedColumn = cell.columnName;
+        this.selectedRow = cell.x;
+      },
+    }
+
     this.gridOptions = {
       rowSelection: 'single',
       cacheBlockSize: 100,
       maxBlocksInCache: 1,
       rowModelType: 'infinite',
       pagination: true,
-      paginationAutoPageSize: true,
+      paginationAutoPageSize: false,
       onCellValueChanged: (e: any) => this.updateCellValue(e),
       onCellFocused: (e: any) => {
         this.selectedColumn = e.column.colId;
@@ -127,16 +176,17 @@ export class HomeComponent implements OnInit {
           }
         },
         editable: true,
-        // make every column use 'text' filter by default
         filter: 'agTextColumnFilter',
       },
     };
   }
+
   getSelectedColumnType() {
     if (this.types != undefined) {
       return this.types[this.selectedColumn];
     }
   }
+
 
   click(event: any) {
     this.menuService.updateMenuEvents(event);
@@ -148,17 +198,33 @@ export class HomeComponent implements OnInit {
       action: 'updateCell',
       value: e.value,
     };
+    console.log(dataForm)
     this.dataService
       .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
       .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
   }
+
+  neWupdateCellValue(cell: Cell) {
+    console.log("neWupdateCellValue")
+    let dataForm = {
+      column: cell.columnName,
+      row: cell.x,
+      action: 'updateCell',
+      value: cell.value,
+    };
+    console.log(dataForm)
+    this.dataService
+      .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
+      .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
+  }
+
+
   onGridReady(params: any) {
     console.log('onGridReady');
     var datasource = {
       getRows: (params: IGetRowsParams) => {
         this.dataSubscription.unsubscribe();
         this.info = 'Getting datasource rows, start: ' + params.startRow + ', end: ' + params.endRow;
-        console.log(this.info);
         this.dataSubscription = this.paginateddataservice.data$.subscribe((data: any) => {
           this.rowData = data;
           params.successCallback(this.rowData);

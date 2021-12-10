@@ -33,7 +33,7 @@ def register_database_exporter_plugin(plugin: DatabaseExporterPlugin):
     container[plugin.handler_class] = plugin.handler_class
 
 def register_data_plugin(plugin: DataPlugin):
-    container[dataPlugins].append(plugin)
+    container[DataPlugins].append(plugin)
     container[plugin.handler_class] = plugin.handler_class
 
 

@@ -1,0 +1,40 @@
+<div class="wrapper">
+  <div class="container">
+    <div class="container-dock">
+      <table class="ex-table" cellpadding="4">
+        <thead>
+          <tr>
+            <th *ngFor="let header of headers; let i = index">
+              <button class="header-button">{{ header.headerName }}</button>
+              <dropdown-button [menuItems]="menuItems" class="header-menu-button"></dropdown-button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of rowsReal; let x = index">
+            <td *ngFor="let item of row | keyvalue; let y = index;">
+              <input
+                #input
+                (focus)="onCellFocus(buildCellFromEvent($event.srcElement.value, x, y))"
+                [ngClass]="[cellStyle]"
+                (change)="onCellChanges(buildCellFromEvent($event.srcElement.value, x, y))"
+                [readonly]="cellStyle == 'ex-cell-default'"
+                (dblclick)="onCellDoubleClick(); input.select()"
+                (blur)="onCellBlur()"
+                type="text"
+                value="{{ row[headers[y].field] }}"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <ex-paginator
+    #paginator
+    [(datasourceParams)]="datasourceParams"
+    (datasourceParamsChange)="onPagination()"
+    class="paginator"
+  ></ex-paginator>
+</div>
+<!--container-->
