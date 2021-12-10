@@ -8,7 +8,7 @@ import { filter, map, switchMap } from 'rxjs/operators';
 import { environment } from '@env/environment';
 import { Logger, untilDestroyed } from '@core';
 import { I18nService } from '@app/i18n';
-
+import {AppLoaderService} from '@app/@shared/services/apploader.service';
 const log = new Logger('App');
 
 @Component({
@@ -17,13 +17,19 @@ const log = new Logger('App');
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
+  isLoading: boolean = false;
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private titleService: Title,
     private translateService: TranslateService,
-    private i18nService: I18nService
-  ) {}
+    private i18nService: I18nService,
+    private appLoaderService: AppLoaderService
+  ) {
+    this.appLoaderService.isLoading$.subscribe(isLoading => {
+      this.isLoading = isLoading;
+    });
+  }
 
   ngOnInit() {
     // Setup logger

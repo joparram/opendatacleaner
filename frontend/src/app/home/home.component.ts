@@ -18,6 +18,7 @@ import { ActionComponent } from '@app/@shared/models/action-component';
 import { ActionDialogComponent } from '@shared/components/component-dialog/action-dialog.component';
 import {  EXDatasourceParams, EXTableDatasource } from '@app/ex-datatable/models/table-data';
 import { Cell, EXTableEvents} from '@app/ex-datatable/models/table-events';
+import { AppLoaderService } from '@app/@shared/services/apploader.service';
 
 @Component({
   selector: 'app-home',
@@ -25,20 +26,12 @@ import { Cell, EXTableEvents} from '@app/ex-datatable/models/table-events';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  quote: string | undefined;
-  isLoading = false;
-  public columnDefs: any[];
-  public rowData: any[];
-  public gridOptions: any;
-  public info: string;
   types: any;
-  rowFunctions: any[];
-  columnFunctions: any[];
   selectedColumn: any;
   selectedRow: any;
   dialogRef: any;
   minRow: number = 0;
-  maxRow: number = 100;
+  maxRow: number = 50;
   dataSubscription: Subscription = new Subscription();
   datasource: EXTableDatasource;
   gridEvents: EXTableEvents;
@@ -62,10 +55,8 @@ export class HomeComponent implements OnInit {
       title: 'Borrar Columna',
     },
   ];
-  @ViewChild('grid') grid: AgGridAngular;
 
   constructor(
-    private quoteService: QuoteService,
     private importService: ImportService,
     private processorService: ProcessorService,
     private menuService: MenuService,
@@ -76,24 +67,6 @@ export class HomeComponent implements OnInit {
     private databaseexporterService: DatabaseExporterService,
     private exporterService: ExporterService
   ) {
-
-    this.datasource = {
-      getRows: (params: EXDatasourceParams, success, error) => {
-        this.dataSubscription.unsubscribe();
-        this.info = 'Getting datasource rows, start: ' + params.firstRow + ', end: ' + params.lastRow;
-        console.log(this.info)
-        this.dataSubscription = this.paginateddataservice.data$.subscribe((data: any) => {
-          console.log("dataSubscription")
-          this.rowData = data;
-          success(this.rowData);
-          this.ref.detectChanges();
-        });
-        this.paginateddataservice.get({ startRow: params.firstRow, endRow: params.lastRow }).subscribe((data: any) => {
-          this.paginateddataservice.updateDataEvents(data);
-        });
-      },
-    };
-
     this.menuService.menu$.subscribe((event) => {
       switch (event.action) {
         case 'import':
@@ -125,87 +98,53 @@ export class HomeComponent implements OnInit {
           break;
       }
     });
-    this.paginateddataservice.columns$.subscribe((columns: any) => {
-      this.columnDefs = columns;
-    });
-    this.paginateddataservice.data$.subscribe((data: any) => {
-    });
+
+
+
     this.paginateddataservice.types$.subscribe((types: any) => {
       this.types = types;
     });
-    this.rowFunctions = [
-      {
-        name: 'Eliminar Fila',
-        updated: 'Elimina una fila del dataset',
-      },
-    ];
-    this.columnFunctions = [
-      {
-        name: 'Eliminar propiedad',
-        updated: 'Elimina una columna',
-      },
-    ];
 
     this.gridEvents = {
       onEditCell: (cell: Cell) => {
         console.log("onEditCell")
-        this.neWupdateCellValue(cell)
+        this.updateCellValue(cell)
       },
       onFocusCell: (cell: Cell) => {
         this.selectedColumn = cell.columnName;
         this.selectedRow = cell.x;
       },
     }
+  }
 
-    this.gridOptions = {
-      rowSelection: 'single',
-      cacheBlockSize: 100,
-      maxBlocksInCache: 1,
-      rowModelType: 'infinite',
-      pagination: true,
-      paginationAutoPageSize: false,
-      onCellValueChanged: (e: any) => this.updateCellValue(e),
-      onCellFocused: (e: any) => {
-        this.selectedColumn = e.column.colId;
-        this.selectedRow = e.rowIndex;
-      },
-      defaultColDef: {
-        cellStyle: (params: any) => {
-          if (params.colDef === this.selectedColumn) {
-            return { 'background-color': '#b7e4ff' };
-          }
+  ngOnInit() {
+
+  }
+
+  onInitTable(params: EXDatasourceParams) {
+    let datasource = {
+      getData: (params: EXDatasourceParams) => {
+          this.minRow = params.firstRow;
+          this.maxRow = params.lastRow;
+          this.dataSubscription.unsubscribe();
+          this.dataSubscription = this.paginateddataservice.fulldata$.subscribe((data: any) => {
+            params.readyData(data.data, data.columns);
+            this.ref.detectChanges();
+          });
+          this.paginateddataservice.get({ startRow: params.firstRow, endRow: params.lastRow }).subscribe((data: any) => {
+            this.paginateddataservice.updateDataEvents(data);
+          });
         },
-        editable: true,
-        filter: 'agTextColumnFilter',
-      },
-    };
+      };
+      params.setDatasource(datasource);
   }
-
-  getSelectedColumnType() {
-    if (this.types != undefined) {
-      return this.types[this.selectedColumn];
-    }
-  }
-
 
   click(event: any) {
     this.menuService.updateMenuEvents(event);
   }
-  updateCellValue(e: any) {
-    let dataForm = {
-      column: e.colDef.field,
-      row: e.rowIndex,
-      action: 'updateCell',
-      value: e.value,
-    };
-    console.log(dataForm)
-    this.dataService
-      .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
-      .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
-  }
 
-  neWupdateCellValue(cell: Cell) {
-    console.log("neWupdateCellValue")
+
+  updateCellValue(cell: Cell) {
     let dataForm = {
       column: cell.columnName,
       row: cell.x,
@@ -216,40 +155,6 @@ export class HomeComponent implements OnInit {
     this.dataService
       .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
       .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
-  }
-
-
-  onGridReady(params: any) {
-    console.log('onGridReady');
-    var datasource = {
-      getRows: (params: IGetRowsParams) => {
-        this.dataSubscription.unsubscribe();
-        this.info = 'Getting datasource rows, start: ' + params.startRow + ', end: ' + params.endRow;
-        this.dataSubscription = this.paginateddataservice.data$.subscribe((data: any) => {
-          this.rowData = data;
-          params.successCallback(this.rowData);
-          this.ref.detectChanges();
-        });
-        this.paginateddataservice.get({ startRow: params.startRow, endRow: params.endRow }).subscribe((data: any) => {
-          this.paginateddataservice.updateDataEvents(data);
-        });
-      },
-    };
-    params.api.setDatasource(datasource);
-  }
-
-  ngOnInit() {
-    this.isLoading = true;
-    this.quoteService
-      .getRandomQuote({ category: 'dev' })
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
-      .subscribe((quote: string) => {
-        this.quote = quote;
-      });
   }
 
   /*DIALOGS*/
