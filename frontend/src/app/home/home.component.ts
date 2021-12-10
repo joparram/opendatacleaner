@@ -126,7 +126,6 @@ export class HomeComponent implements OnInit {
 
     this.gridEvents = {
       onEditCell: (cell: Cell) => {
-        console.log("onEditCell")
         this.updateCellValue(cell)
       },
       onFocusCell: (cell: Cell) => {
@@ -170,7 +169,6 @@ export class HomeComponent implements OnInit {
       action: 'updateCell',
       value: cell.value,
     };
-    console.log(dataForm)
     this.dataService
       .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
       .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
@@ -197,15 +195,12 @@ export class HomeComponent implements OnInit {
   }
 
   private deleteRow() {
-    console.log("row: ", this.selectedRow)
-    console.log("holaaaaa")
     this.dataService
     .post({action: 'deleteRow', "column": undefined, "row": this.selectedRow}, { startRow: this.minRow, endRow: this.maxRow })
     .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
   }
 
   private deleteColumn(column: any) {
-    console.log("Columna: ", column)
     this.dataService
     .post({action: 'deleteColumn', "column": column,"row": undefined}, { startRow: this.minRow, endRow: this.maxRow })
     .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
@@ -246,10 +241,8 @@ export class HomeComponent implements OnInit {
     this.dialogRef.componentInstance.component = component;
     this.dialogRef.afterClosed().subscribe((dataForm: any) => {
       if (dataForm) {
-        console.log(dataForm)
         dataForm.column = this.selectedColumn;
         dataForm.row = this.selectedRow;
-        console.log(dataForm)
         this.dataService
           .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
           .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
