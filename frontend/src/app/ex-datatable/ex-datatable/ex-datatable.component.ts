@@ -39,6 +39,9 @@ export class ExDatatableComponent implements OnInit, OnChanges {
   };
 
   @Input()
+  contextmenuItems: any[];
+
+  @Input()
   events: EXTableEvents;
 
   @Input()
@@ -102,10 +105,6 @@ export class ExDatatableComponent implements OnInit, OnChanges {
       y: y,
     }
     return cell;
-  }
-
-  openContextMenu(event: any) {
-    event.preventDefault();
   }
 
   @HostListener('window:keyup', ['$event'])

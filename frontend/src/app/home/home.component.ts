@@ -1,10 +1,5 @@
-import { Component, HostListener, Input, ViewChild, OnInit, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
-import { finalize } from 'rxjs/operators';
-import { GridOptions, IDatasource, IGetRowsParams, ColDef } from 'ag-grid';
-import { AgGridAngular } from 'ag-grid-angular';
-import { Observable, Subscription } from 'rxjs';
-import { of } from 'rxjs';
-import { QuoteService } from './quote.service';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ImportService } from '@app/@shared/services/import.service';
 import { DatabaseExporterService } from '@app/@shared/services/databaseexporter.service';
 import { ExporterService } from '@app/@shared/services/exporter.service';
@@ -18,7 +13,6 @@ import { ActionComponent } from '@app/@shared/models/action-component';
 import { ActionDialogComponent } from '@shared/components/component-dialog/action-dialog.component';
 import {  EXDatasourceParams, EXTableDatasource } from '@app/ex-datatable/models/table-data';
 import { Cell, EXTableEvents} from '@app/ex-datatable/models/table-events';
-import { AppLoaderService } from '@app/@shared/services/apploader.service';
 
 @Component({
   selector: 'app-home',
@@ -35,24 +29,49 @@ export class HomeComponent implements OnInit {
   dataSubscription: Subscription = new Subscription();
   datasource: EXTableDatasource;
   gridEvents: EXTableEvents;
+  contextmenuItems: any[] = [
+    {
+      title: 'borrar fila',
+      function: () => this.deleteRow(),
+    },
+  ]
   menuItems: any[] = [
     {
       title: 'Cambiar Tipo',
       menu: [
         {
-          title: 'int',
-          function: () => console.log('hello world!'),
+          title: 'object',
+          function: () => this.setType('object'),
         },
         {
           title: 'float',
+          function: () => this.setType('float'),
         },
         {
-          title: 'string',
+          title: 'int64',
+          function: () => this.setType('int64'),
+        },
+        {
+          title: 'float64',
+          function: () => this.setType('float64'),
+        },
+        {
+          title: 'bool',
+          function: () => this.setType('bool'),
+        },
+        {
+          title: 'datetime64[ns]',
+          function: () => this.setType('datetime64[ns]'),
         },
       ],
     },
     {
-      title: 'Borrar Columna',
+      title: 'Procesar',
+      function: (column: any) => this.processor(column),
+    },
+    {
+      title: 'Borrar',
+      function: (column: any) => this.deleteColumn(column)
     },
   ];
 
@@ -158,6 +177,40 @@ export class HomeComponent implements OnInit {
   }
 
   /*DIALOGS*/
+  private processor(column: any) {
+    this.processorService.get().subscribe((component: ActionComponent) => {
+      this.processorDialog(component, undefined, column);
+    })
+  }
+
+
+  private setType(type: string) {
+    let dataForm = {
+      column:this.selectedColumn,
+      row: this.selectedRow,
+      type: type,
+      action: 'setType'
+    };
+    this.dataService
+          .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
+          .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
+  }
+
+  private deleteRow() {
+    console.log("row: ", this.selectedRow)
+    console.log("holaaaaa")
+    this.dataService
+    .post({action: 'deleteRow', "column": undefined, "row": this.selectedRow}, { startRow: this.minRow, endRow: this.maxRow })
+    .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
+  }
+
+  private deleteColumn(column: any) {
+    console.log("Columna: ", column)
+    this.dataService
+    .post({action: 'deleteColumn', "column": column,"row": undefined}, { startRow: this.minRow, endRow: this.maxRow })
+    .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
+  }
+
   private importDialog(component: ActionComponent) {
     this.dialogRef = this.dialog.open(ActionDialogComponent, {
       disableClose: false,
@@ -171,15 +224,15 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-  private processorDialog(component: ActionComponent) {
+  private processorDialog(component: ActionComponent, selectedRow?: any, selectedColumn?: any) {
     this.dialogRef = this.dialog.open(ActionDialogComponent, {
       disableClose: false,
     });
     this.dialogRef.componentInstance.component = component;
     this.dialogRef.afterClosed().subscribe((dataForm: any) => {
       if (dataForm) {
-        dataForm.column = this.selectedColumn;
-        dataForm.row = this.selectedRow;
+        dataForm.column = (selectedColumn !== undefined) ? selectedColumn : this.selectedColumn;
+        dataForm.row = (selectedRow !== undefined) ? selectedRow : this.selectedRow;
         this.processorService
           .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
           .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
@@ -193,8 +246,10 @@ export class HomeComponent implements OnInit {
     this.dialogRef.componentInstance.component = component;
     this.dialogRef.afterClosed().subscribe((dataForm: any) => {
       if (dataForm) {
+        console.log(dataForm)
         dataForm.column = this.selectedColumn;
         dataForm.row = this.selectedRow;
+        console.log(dataForm)
         this.dataService
           .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
           .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
