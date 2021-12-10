@@ -39,6 +39,9 @@ export class ExDatatableComponent implements OnInit, OnChanges {
   };
 
   @Input()
+  contextmenuItems: any[];
+
+  @Input()
   events: EXTableEvents;
 
   @Input()

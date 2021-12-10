@@ -3,6 +3,11 @@
 input {
   cursor: default;
 }
+excontext-context-menu {
+  margin: 0;
+  padding: 0;
+  z-index: 9999;
+}
 .wrapper {
   display: flex;
   flex-direction: column;

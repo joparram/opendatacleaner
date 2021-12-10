@@ -1,30 +1,25 @@
 <div class="grid-container">
   <div class="actions">
     <mat-list class="action-list">
-      <div mat-subheader>Funciones</div>
+      <div mat-subheader>Avanzado</div>
       <mat-list-item (click)="click({ action: 'data' })">
         <mat-icon mat-list-icon>build_circle</mat-icon>
-        <div mat-line>Modificar datos</div>
+        <div mat-line>Manipulación</div>
+        <div mat-line>Fila: {{ selectedRow }}</div>
+        <div mat-line>Columna: {{ selectedColumn | slice: 0:8 }}</div>
       </mat-list-item>
       <mat-list-item (click)="click({ action: 'process' })">
         <mat-icon mat-list-icon>build_circle</mat-icon>
         <div mat-line>Procesar</div>
+        <div mat-line>Fila: {{ selectedRow }}</div>
+        <div mat-line>Columna: {{ selectedColumn | slice: 0:8 }}</div>
       </mat-list-item>
       <mat-list-item (click)="click({ action: 'databaseexporter' })">
         <mat-icon mat-list-icon>build_circle</mat-icon>
         <div mat-line>Exportar a BD</div>
       </mat-list-item>
-      <mat-list-item>
-        <mat-icon mat-list-icon>build_circle</mat-icon>
-        <div mat-line>Pipeline</div>
-      </mat-list-item>
     </mat-list>
     <mat-divider></mat-divider>
-    <mat-list class="info">
-      <mat-list-item> Fila: {{ selectedRow }} </mat-list-item>
-      <mat-list-item> Columna: {{ selectedColumn | slice: 0:8 }} </mat-list-item>
-      <mat-list-item> Tipo: <span *ngIf="selectedColumn">{{ types[selectedColumn] }}</span></mat-list-item>
-    </mat-list>
   </div>
   <div class="sugestions">
     <mat-tab-group>
@@ -64,6 +59,7 @@
       (onTableInit)="onInitTable($event)"
       [events]="gridEvents"
       [menuItems]="menuItems"
+      [contextmenuItems]="contextmenuItems"
       style="width: 100%; height: 100%"
     ></ex-datatable>
   </div>

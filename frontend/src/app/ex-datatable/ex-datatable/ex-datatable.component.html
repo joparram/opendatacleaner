@@ -1,12 +1,13 @@
+<excontext-context-menu #contextmenu [items]="contextmenuItems"></excontext-context-menu>
 <div class="wrapper">
   <div class="container">
     <div class="container-dock">
-      <table class="ex-table" cellpadding="4">
+      <table class="ex-table" cellpadding="4" (contextmenu)="contextmenu.rightClick($event)">
         <thead>
-          <tr>
+          <tr >
             <th *ngFor="let header of headers; let i = index">
               <button class="header-button">{{ header.headerName }}</button>
-              <dropdown-button [menuItems]="menuItems" class="header-menu-button"></dropdown-button>
+              <dropdown-button [columnid]="header.field" [menuItems]="menuItems" class="header-menu-button"></dropdown-button>
             </th>
           </tr>
         </thead>
@@ -19,8 +20,8 @@
                 [ngClass]="[cellStyle]"
                 (change)="onCellChanges(buildCellFromEvent($event.srcElement.value, x, y))"
                 [readonly]="cellStyle == 'ex-cell-default'"
-                (dblclick)="onCellDoubleClick(); input.select()"
-                (blur)="onCellBlur()"
+                (dblclick)="onCellDoubleClick();input.select()"
+                (blur)="onCellBlur();"
                 type="text"
                 value="{{ row[headers[y].field] }}"
               />

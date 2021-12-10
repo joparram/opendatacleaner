@@ -9,6 +9,7 @@ export class DropdownButtonComponent implements OnInit {
   visible: boolean = false;
   @ViewChild('menuBtn') menuBtn: ElementRef;
   @Input() menuItems: any = [];
+  @Input() columnid: any;
 
   constructor() {}
 
@@ -17,8 +18,9 @@ export class DropdownButtonComponent implements OnInit {
 
   onClickMenuItem(fun: Function) {
     this.menuBtn.nativeElement.blur();
+    console.log(this.columnid)
     if (fun !== undefined) {
-      fun();
+      fun(this.columnid);
     }
   }
 }

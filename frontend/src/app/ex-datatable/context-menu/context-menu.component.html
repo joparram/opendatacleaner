@@ -1,0 +1,5 @@
+<div id="contextMenu" class="context-menu" style="display: none" #contextmenu>
+  <ul class="menu">
+      <li class="share" *ngFor="let item of items; let i = index" (click)="onClickMenuItem(item?.function)"><span><i aria-hidden="true"></i> {{ item?.title }}</span></li>
+  </ul>
+</div>
