@@ -1,16 +1,12 @@
 import {
-  AfterViewInit,
   Component,
   OnInit,
   ChangeDetectorRef,
-  ViewChild,
   ViewChildren,
-  SimpleChanges,
-  OnChanges,
   QueryList,
   ElementRef,
 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ActionComponent } from '../../models/action-component';
 
@@ -40,6 +36,7 @@ export class ActionDialogComponent implements OnInit {
     this.action = this.component.actions[0];
     this.createParametersForm();
   }
+
   getFormData() {
     let params = this.parameters.getRawValue();
     params.action = this.action.name;
@@ -57,6 +54,7 @@ export class ActionDialogComponent implements OnInit {
     console.log(params);
     return params;
   }
+
   public onChanges() {
     this.createParametersForm();
   }
