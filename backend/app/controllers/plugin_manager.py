@@ -29,8 +29,10 @@ class PluginManagerController(Resource):
             response = jsonify(data)
         elif (type(data) is PosixPath):
             response = send_file(data, attachment_filename=data.name, as_attachment=True)
+            response.headers["File-Name"] = data.name
         elif (type(data) is Path):
             response = send_file(data, attachment_filename=data.name, as_attachment=True)
+            response.headers["File-Name"] = data.name
         else:
             response = data
         return response

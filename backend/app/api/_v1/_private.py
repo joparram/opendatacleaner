@@ -44,7 +44,7 @@ def unregister_processor_plugin(pluginName):
             container[ProcessorPlugins].remove(i)
             print("unregister processor plugin: "+pluginName)
             break
-    print("fin")    
+
 def unregister_importer_plugin(pluginName):
     for i in container[ImporterPlugins]:
         if i.name == pluginName:
@@ -53,7 +53,7 @@ def unregister_importer_plugin(pluginName):
             container[ImporterPlugins].remove(i)
             print("unregister importer plugin: "+pluginName)
             break
-    
+
 def unregister_exporter_plugin(pluginName):
     for i in container[ExporterPlugins]:
         if i.name == pluginName:
@@ -77,9 +77,23 @@ def unregister_data_plugin(pluginName):
             print("unregister data plugin: "+pluginName)
             break
 
+def get_importer_plugins():
+    return container[ImporterPlugins]
+def get_exporter_plugins():
+    return container[ExporterPlugins]
+def get_processor_plugins():
+    return container[ProcessorPlugins]
+def get_database_exporter_plugins():
+    return container[DatabaseExporterPlugins]
+def get_data_plugins():
+    return container[DataPlugins]
+
 def register_component(component: Component):
     print("registro de componente: "+component.name)
     container[Components].append(component)
     container[component.handler_class] = component.handler_class
+
+
+
 
 container = create_container()

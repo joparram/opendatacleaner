@@ -11,6 +11,7 @@ import { environment } from '@env/environment';
 import { CoreModule } from '@core';
 import { SharedModule } from '@shared';
 import { HomeModule } from './home/home.module';
+import {PluginmanagerModule } from './pluginmanager/pluginmanager.module';
 import { ShellModule } from './shell/shell.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -29,6 +30,7 @@ import { AppRoutingModule } from './app-routing.module';
     ShellModule,
     HomeModule,
     AppRoutingModule,
+    PluginmanagerModule,
   ],
   declarations: [AppComponent],
   providers: [],

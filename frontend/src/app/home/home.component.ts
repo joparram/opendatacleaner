@@ -146,6 +146,8 @@ export class HomeComponent implements OnInit {
           this.maxRow = params.lastRow;
           this.dataSubscription.unsubscribe();
           this.dataSubscription = this.paginateddataservice.fulldata$.subscribe((data: any) => {
+            console.log("******************")
+            console.log(data)
             params.readyData(data.data, data.columns);
             this.ref.detectChanges();
           });
