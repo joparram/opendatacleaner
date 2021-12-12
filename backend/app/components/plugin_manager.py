@@ -21,7 +21,7 @@ Actions = [
                       name="downloadPluginTemplate",
                       description="Descarga una plantilla de plugin",
                       params=[
-                          _v1.Param(name="component", options=["data", "exporter", "importer", "processor", "databaseExporter"], kind="select"),
+                          _v1.Param(name="component", options=["Data", "Exporter", "Importer", "Processor", "DatabaseExporter"], kind="select"),
                       ]),
             _v1.Action(
                       name="uploadPlugin",
@@ -43,11 +43,43 @@ class PluginManager:
     # constructor which initialize handlers and defined actions
     def __init__(self):
         self.actions = {
-            "default": self.downloadPluginTemplateHandler,
+            "default": self.defaultHandler,
             "downloadPluginTemplate": self.downloadPluginTemplateHandler,
             "uploadPlugin": self.uploadPluginHandler,
             "deletePlugin": self.deletePluginHandler,
         }
+
+    def _getAllPlugins(self):
+        columns = []
+        data = []
+        
+        processorPlugins = []
+        exporterPlugins = []
+        importerPlugins = []
+        dataPlugins = []
+        databaseExporterPlugins = []
+
+        _processorPlugins = _v1.get_processor_plugins()
+        _exporterPlugins = _v1.get_exporter_plugins()
+        _importerPlugins = _v1.get_importer_plugins()
+        _databaseExporterPlugins = _v1.get_database_exporter_plugins()
+        _dataPlugins = _v1.get_data_plugins()
+
+        for i in _processorPlugins:
+            processorPlugins.append(i.name)
+        for i in _exporterPlugins:
+            exporterPlugins.append(i.name)
+        for i in _importerPlugins:
+            importerPlugins.append(i.name)
+        for i in _databaseExporterPlugins:
+            databaseExporterPlugins.append(i.name)
+        for i in _dataPlugins:
+            dataPlugins.append(i.name)
+
+        return dict(processorPlugins=processorPlugins, exporterPlugins=exporterPlugins, importerPlugins=importerPlugins, databaseExporterPlugins=databaseExporterPlugins, dataPlugins=dataPlugins)
+
+    def defaultHandler(self, request):
+        return self._getAllPlugins()
 
     def downloadPluginTemplateHandler(self, request):
         _component = request.form.get("component")
@@ -65,7 +97,7 @@ class PluginManager:
             _file.seek(0)
             _file.save(Path("app/plugins/{}.py".format(_componentName)))
             plugin_loader.load_plugins()
-            return "Plugin uploaded"
+            return self._getAllPlugins()
         else:
             raise Error('No se ha proporcionado ningun archivo')
 
@@ -74,15 +106,15 @@ class PluginManager:
         _component = request.form.get("component") 
         if Path("app/plugins/{}.py".format(_plugin)).exists():
             # unregister component from api
-            if _component == "processor":
+            if _component == "Processor":
                 _v1.unregister_processor_plugin(_plugin)
-            elif _component == "exporter":
+            elif _component == "Exporter":
                 _v1.unregister_exporter_plugin(_plugin)
-            elif _component == "importer":
+            elif _component == "Importer":
                 _v1.unregister_importer_plugin(_plugin)
-            elif _component == "data":
+            elif _component == "Data":
                 _v1.unregister_data_plugin(_plugin)
-            elif _component == "databaseExporter":
+            elif _component == "DatabaseExporter":
                 _v1.unregister_database_exporter_plugin(_plugin)
             else:
                 raise Error('Componente {} desconocido'.format(_component))
@@ -97,7 +129,7 @@ class PluginManager:
             if _pluginmodule in sys.modules:
                 print("removing module: ", _pluginmodule)
                 del sys.modules[_pluginmodule]
-            return "Plugin deleted"
+            return self._getAllPlugins()
         else:
             raise Error('Plugin {} not found'.format(_plugin))
 

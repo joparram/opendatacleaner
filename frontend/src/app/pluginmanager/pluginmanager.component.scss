@@ -1,20 +1,5 @@
 @import "src/theme/theme-variables";
 
-// .container {
-//   text-align: center;
-//   // padding: 1em;
-// }
-
-// .logo {
-//   width: 150px;
-//   margin: 0 auto;
-// }
-
-// q {
-//   font-style: italic;
-//   quotes: "« " " »";
-// }
-
 .grid-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -27,8 +12,8 @@
     "actions dataset dataset dataset dataset dataset dataset"
     "actions dataset dataset dataset dataset dataset dataset"
     "actions dataset dataset dataset dataset dataset dataset"
-    "actions sugestions sugestions sugestions sugestions sugestions sugestions"
-    "actions sugestions sugestions sugestions sugestions sugestions sugestions";
+    "actions dataset dataset dataset dataset dataset dataset"
+    "actions dataset dataset dataset dataset dataset dataset";
 }
 .actions {
   grid-area: actions;
@@ -47,7 +32,9 @@
 }
 .dataset {
   grid-area: dataset;
+  overflow-y: scroll;
 }
+
 
 .sugestions-actions > * {
   margin-right: 16px;
@@ -63,3 +50,10 @@
   margin-left: 8px !important;
 }
 
+:host ::ng-deep .mat-tab-header {
+  top: 0;
+  z-index: 1000000;
+  background: #f0f0f0;
+  position: sticky;
+  position: -webkit-sticky; /* macOS/iOS Safari */
+}
