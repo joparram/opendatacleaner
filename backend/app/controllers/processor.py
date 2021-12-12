@@ -29,6 +29,7 @@ class ProcessorController(Resource):
         components: Components = _v1._private.container[Components]
         plugins: Components = _v1._private.container[ProcessorPlugins]
         pluginName = request.args.get('plugin')
+        print("pluginName: {}".format(pluginName))
         if pluginName == None:
             component = next(x for x in components if x.name == componentName )
             data = _v1._private.container[component.handler_class](request)
