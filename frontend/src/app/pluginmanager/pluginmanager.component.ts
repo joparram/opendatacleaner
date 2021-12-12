@@ -4,6 +4,7 @@ import { PluginmanagerService } from '@app/@shared/services/pluginmanager.servic
 import {ImportDialogComponent} from './import-dialog/import-dialog.component';
 import { environment } from '@env/environment';
 import { MatDialog } from '@angular/material/dialog';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-pluginmanager',
@@ -57,7 +58,7 @@ export class PluginmanagerComponent implements OnInit {
     this.dialogRef = this.dialog.open(ImportDialogComponent, {
       disableClose: false,
     });
-    this.dialogRef.afterClosed().subscribe((confirm: any) => {
+    this.dialogRef.afterClosed().pipe(take(1)).subscribe((confirm: any) => {
       if (confirm) {
         this.pluginmanager.uploadPlugin(confirm.file).subscribe((data: any) => {
           this.processorPlugins = data.processorPlugins;

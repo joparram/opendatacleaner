@@ -54,16 +54,24 @@ class dataframeHandler:
 
     @staticmethod
     def getAllData(pagination = {}):
-        df = dataframeHandler.getDataframe()
-        columnsraw = list(df.columns)
-        columns = []
-        data = {}
-        # Fix json format
-        for column in columnsraw:
-            columns.append(dict (headerName=column, field=column))
-        if "startRow" in pagination and "endRow" in pagination:
-            if pagination["startRow"] != None and pagination["endRow"] != None:
-                data = df.iloc[pagination["startRow"]:pagination["endRow"]].replace({np.nan:None}).to_dict('records')
-        else:
-            data = df.replace({np.nan:None}).to_dict('records')
-        return dict (data=data, types=df.dtypes.apply(lambda x: x.name).to_dict(), columns=columns)
+        try:
+            df = dataframeHandler.getDataframe()
+            columnsraw = list(df.columns)
+            columns = []
+            data = {}
+            # Fix json format
+            for column in columnsraw:
+                columns.append(dict (headerName=column, field=column))
+            if "startRow" in pagination and "endRow" in pagination:
+                if pagination["startRow"] != None and pagination["endRow"] != None:
+                    data = df.iloc[pagination["startRow"]:pagination["endRow"]].replace({np.nan:None}).to_dict('records')
+            else:
+                data = df.replace({np.nan:None}).to_dict('records')
+            return dict (data=data, types=df.dtypes.apply(lambda x: x.name).to_dict(), columns=columns)
+        except Exception as e:
+            print(e)
+            return dict (data=[], types=[], columns=[])
+
+    @staticmethod
+    def deleteCached ():
+        os.remove("cached")
