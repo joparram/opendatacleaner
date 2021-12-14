@@ -69,7 +69,7 @@ class Processor:
 
     # default application handle which allow to import files though file handlers
     def defaultHandler(self, request):
-        console.log("defaultHandler")
+        pass
 
     def averageImputingHandler(self, request):
         df = dataframeHandler.getDataframe()

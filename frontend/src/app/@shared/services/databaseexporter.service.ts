@@ -22,15 +22,19 @@ export class DatabaseExporterService {
     /** In Angular 5, including the header Content-Type can invalidate your request */
     headers.append('Content-Type', 'multipart/form-data');
     headers.append('Accept', 'application/json');
+    let _params = {} as any;
+    _params.action = data.action;
     if (pagination !== undefined) {
-      params = new HttpParams()
-        .set('startRow', JSON.stringify(pagination.startRow))
-        .set('endRow', JSON.stringify(pagination.endRow))
-        .set('action', data.action);
-    } else {
-      params = new HttpParams().set('action', data.action);
+      _params.startRow = JSON.stringify(pagination.startRow);
+      _params.endRow = JSON.stringify(pagination.endRow);
     }
+    if (data.plugin !== undefined) {
+      _params.plugin = data.plugin;
+    }
+    params = new HttpParams({ fromObject: _params });
     delete data['action'];
+    delete data['plugin'];
+
     for (var key in data) {
       var name = key;
       var value = data[key];

@@ -1,0 +1,10 @@
+<h1 matDialogTitle>Cargar plugin</h1>
+<form [formGroup]="parameters">
+  <h4>Seleccione un archivo .py</h4>
+  <input  name="file" #fileinput type="file" />
+</form>
+<!-- {confirm: true, plugin: plugin, action: action, parameters: parameters.getRawValue()} -->
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="dialogRef.close(getFormData())">Confirmar</button>
+  <button mat-button (click)="dialogRef.close(false)">Cancelar</button>
+</div>

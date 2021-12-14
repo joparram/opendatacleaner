@@ -6,7 +6,7 @@
         <thead>
           <tr >
             <th *ngFor="let header of headers; let i = index">
-              <button class="header-button">{{ header.headerName }}</button>
+              <button class="header-button"><span>{{ header.headerName }}</span><span>{{header?.subtitle}}</span></button>
               <dropdown-button [columnid]="header.field" [menuItems]="menuItems" class="header-menu-button"></dropdown-button>
             </th>
           </tr>
@@ -31,7 +31,9 @@
       </table>
     </div>
   </div>
+  <div *ngIf="headers.length == 0" id="nodatabanner" mat-subheader>No se han cargado datos</div>
   <ex-paginator
+    [hidden]="headers.length == 0"
     #paginator
     [(datasourceParams)]="datasourceParams"
     (datasourceParamsChange)="onPagination()"

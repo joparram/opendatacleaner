@@ -29,7 +29,8 @@ export class ContextMenuComponent implements OnInit {
     e.preventDefault();
     this.contextmenu.nativeElement.style.display = 'block';
     this.contextmenu.nativeElement.style.left = e.clientX + 'px';
-    this.contextmenu.nativeElement.style.top = e.clientY + 'px';
+    this.contextmenu.nativeElement.style.top = e.layerY + 'px';
+    console.log(e)
   }
 
 

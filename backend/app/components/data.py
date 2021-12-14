@@ -36,6 +36,11 @@ Actions = [
                       name="deleteColumn",
                       description="Transforma una columna a un tipo concreto",
                       params=[
+                      ]),
+            _v1.Action(
+                      name="closeProject",
+                      description="Transforma una columna a un tipo concreto",
+                      params=[
                       ])
           ]
 ## Component importer
@@ -48,6 +53,7 @@ class Data:
             "updateCell": self.updateCellHandler,
             "deleteRow": self.deleteRowHandler,
             "deleteColumn": self.deleteColumnHandler,
+            "closeProject": self.closeProjectHandler,
         }
         self.typesHandlers = {
             "float64": self.setTypeFloatHandler,
@@ -100,6 +106,9 @@ class Data:
         df = dataframeHandler.getDataframe()
         df[column] = pd.to_numeric(df[column], errors='coerce')
         dataframeHandler.saveDataframe(df)
+
+    def closeProjectHandler(self, request):
+        dataframeHandler.deleteCached()
 
     def updateCellHandler(self, request):
         column = request.form.get('column')
