@@ -1,0 +1,71 @@
+<div class="grid-container">
+  <div class="actions">
+    <mat-list class="action-list">
+      <div mat-subheader>Acciones</div>
+      <mat-list-item >
+        <mat-icon mat-list-icon>cloud_upload</mat-icon>
+        <div mat-line>Cargar plugin</div>
+      </mat-list-item>
+    </mat-list>
+    <mat-divider></mat-divider>
+    <mat-list class="action-list">
+      <div mat-subheader>Descarga de templates</div>
+      <mat-list-item>
+        <mat-icon mat-list-icon>cloud_download</mat-icon>
+        <div mat-line>processor template</div>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon mat-list-icon>cloud_download</mat-icon>
+        <div mat-line>importer template</div>
+      </mat-list-item>
+      <mat-list-item >
+        <mat-icon mat-list-icon>cloud_download</mat-icon>
+        <div mat-line>exporter template</div>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon mat-list-icon>cloud_download</mat-icon>
+        <div mat-line>data template</div>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon mat-list-icon>cloud_download</mat-icon>
+        <div mat-line>database exporter template</div>
+      </mat-list-item>
+    </mat-list>
+    <mat-divider></mat-divider>
+  </div>
+  <div class="dataset">
+    <mat-tab-group>
+      <mat-tab label="Processor">
+        <mat-list role="list">
+          <div mat-subheader *ngIf="processorPlugins.length === 0">No se han cargado plugins para este componente</div>
+          <mat-list-item role="listitem" *ngFor="let plugin of processorPlugins; let i = index">{{ plugin }}<button mat-icon-button><mat-icon mat-list-icon>delete_forever</mat-icon></button></mat-list-item>
+        </mat-list>
+      </mat-tab>
+      <mat-tab label="Importer">
+        <mat-list role="list">
+          <div mat-subheader *ngIf="importerPlugins.length === 0">No se han cargado plugins para este componente</div>
+          <mat-list-item role="listitem" *ngFor="let plugin of importerPlugins; let i = index">{{ plugin }}<button mat-icon-button><mat-icon mat-list-icon>delete_forever</mat-icon></button></mat-list-item>
+        </mat-list>
+      </mat-tab>
+      <mat-tab label="Exporter">
+        <mat-list role="list">
+          <div mat-subheader *ngIf="exporterPlugins.length === 0">No se han cargado plugins para este componente</div>
+          <mat-list-item role="listitem" *ngFor="let plugin of exporterPlugins; let i = index">{{ plugin }}<button mat-icon-button><mat-icon mat-list-icon>delete_forever</mat-icon></button></mat-list-item>
+        </mat-list>
+      </mat-tab>
+      <mat-tab label="DatabaseExporter">
+        <mat-list role="list">
+          <div mat-subheader *ngIf="databaseExporterPlugins.length === 0">No se han cargado plugins para este componente</div>
+          <mat-list-item role="listitem" *ngFor="let plugin of databaseExporterPlugins; let i = index">{{ plugin }}<button mat-icon-button ><mat-icon mat-list-icon>delete_forever</mat-icon></button></mat-list-item>
+        </mat-list>
+      </mat-tab>
+      <mat-tab label="Data">
+        <mat-list role="list">
+          <div mat-subheader *ngIf="dataPlugins.length === 0">No se han cargado plugins para este componente</div>
+          <mat-list-item role="listitem" *ngFor="let plugin of dataPlugins; let i = index">{{ plugin }}<button mat-icon-button ><mat-icon mat-list-icon>delete_forever</mat-icon></button></mat-list-item>
+        </mat-list>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+

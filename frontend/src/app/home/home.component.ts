@@ -5,6 +5,9 @@ import { DatabaseExporterService } from '@app/@shared/services/databaseexporter.
 import { ExporterService } from '@app/@shared/services/exporter.service';
 
 import { ProcessorService } from '@app/@shared/services/processor.service';
+
+import { TransformService } from '@app/@shared/services/transform.service';
+
 import { MenuService } from '@app/@shared/services/menu.service';
 import { PaginatedDataService } from '@app/@shared/services/paginateddata.service';
 import { DataService } from '@app/@shared/services/data.service';
@@ -42,44 +45,53 @@ export class HomeComponent implements OnInit, OnDestroy {
       title: 'Cambiar Tipo',
       menu: [
         {
+          title: 'str',
+          function: (c: any) => this.setType(c, 'str'),
+        },
+        {
           title: 'object',
-          function: () => this.setType('object'),
+          function: (c: any) => this.setType(c, 'object'),
         },
         {
           title: 'float',
-          function: () => this.setType('float'),
+          function: (c: any) => this.setType(c, 'float'),
         },
         {
           title: 'int64',
-          function: () => this.setType('int64'),
+          function: (c: any) => this.setType(c, 'int64'),
         },
         {
           title: 'float64',
-          function: () => this.setType('float64'),
+          function: (c: any) => this.setType(c, 'float64'),
         },
         {
           title: 'bool',
-          function: () => this.setType('bool'),
+          function: (c: any) => this.setType(c, 'bool'),
         },
         {
           title: 'datetime64[ns]',
-          function: () => this.setType('datetime64[ns]'),
+          function: (c: any) => this.setType(c, 'datetime64[ns]'),
         },
       ],
     },
     {
       title: 'Procesar',
-      function: (column: any) => this.processor(column),
+      function: (c: any) => this.processor(c),
+    },
+    {
+      title: 'Transformar',
+      function: (c: any) => this.transform(c),
     },
     {
       title: 'Borrar',
-      function: (column: any) => this.deleteColumn(column)
+      function: (c: any) => this.deleteColumn(c)
     },
   ];
 
   constructor(
     private importService: ImportService,
     private processorService: ProcessorService,
+    private transformService: TransformService,
     private menuService: MenuService,
     private dialog: MatDialog,
     private ref: ChangeDetectorRef,
@@ -106,6 +118,12 @@ export class HomeComponent implements OnInit, OnDestroy {
                 this.processorDialog(component);
               })
             break;
+          case 'transform':
+            this.transformService.get().pipe(take(1)).subscribe((component: ActionComponent) => {
+              console.log("transform")
+              this.transformDialog(component);
+            })
+          break;
           case 'data':
               this.dataService.get().pipe(take(1)).subscribe((component: ActionComponent) => {
                 this.dataDialog(component);
@@ -161,7 +179,7 @@ export class HomeComponent implements OnInit, OnDestroy {
               console.log(data)
               const headers = data.columns
               headers.forEach((header: any) => {
-                header.subtitle = data.types[header.field]
+                header.subtitle = "type:" + data.types[header.field]
               })
               console.log(headers)
               params.readyData(data.data, data.columns);
@@ -201,16 +219,21 @@ export class HomeComponent implements OnInit, OnDestroy {
     console.log("destroy")
   }
   /*DIALOGS*/
-  private processor(column: any) {
+  private processor(c: any) {
     this.processorService.get().pipe(take(1)).subscribe((component: ActionComponent) => {
-      this.processorDialog(component, undefined, column);
+      this.processorDialog(component, undefined, c);
+    })
+  }
+  private transform(column: any) {
+    this.transformService.get().pipe(take(1)).subscribe((component: ActionComponent) => {
+      this.transformDialog(component, undefined, column);
     })
   }
 
 
-  private setType(type: string) {
+  private setType(c: any, type: string) {
     let dataForm = {
-      column:this.selectedColumn,
+      column: c,
       row: this.selectedRow,
       type: type,
       action: 'setType'
@@ -317,6 +340,22 @@ export class HomeComponent implements OnInit, OnDestroy {
           element.click();
           document.body.removeChild(element);
         });
+      }
+    });
+  }
+
+  private transformDialog(component: ActionComponent, selectedRow?: any, selectedColumn?: any) {
+    this.dialogRef = this.dialog.open(ActionDialogComponent, {
+      disableClose: false,
+    });
+    this.dialogRef.componentInstance.component = component;
+    this.dialogRef.afterClosed().pipe(take(1)).subscribe((dataForm: any) => {
+      if (dataForm) {
+        dataForm.column = (selectedColumn !== undefined) ? selectedColumn : this.selectedColumn;
+        dataForm.row = (selectedRow !== undefined) ? selectedRow : this.selectedRow;
+        this.transformService
+          .post(dataForm, { startRow: this.minRow, endRow: this.maxRow })
+          .subscribe((data: any) => this.paginateddataservice.updateDataEvents(data));
       }
     });
   }

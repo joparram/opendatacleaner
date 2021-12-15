@@ -1,4 +1,4 @@
-FROM python:3.7.9-buster@sha256:cad2e47ce9f5266844285184b799fbae7634d3a469e4effbcadf1ae0aa6ece87
+FROM python:3.8.12-buster
 # Variables de entorno
 env HOME="/app" \
     USERNAME="worker" \

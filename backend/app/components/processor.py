@@ -108,7 +108,7 @@ class Processor:
         df_copy = df.copy()
         for col_name in df_copy.columns:
             print(col_name, df_copy[col_name].dtype)
-            if (df_copy[col_name].dtype == "object"):
+            if (df_copy[col_name].dtype == "object" or df_copy[col_name].dtype == "string"):
               series = df_copy[col_name]
               label_encoder = preprocessing.LabelEncoder()
               df_copy[col_name] = pd.Series(
@@ -121,9 +121,10 @@ class Processor:
         imputer = KNNImputer(n_neighbors=int(n_neighbors))
         imputedData = imputer.fit_transform(df_copy)
         imputed_dataframe = pd.DataFrame(imputedData, columns=df_copy.columns)
-        if(df[column].dtype == "object"):
-          imputed_dataframe[[column]] = imputed_dataframe[[column]].astype(int)
-          imputed_dataframe[[column]] = encoders[column].inverse_transform(imputed_dataframe[[column]])
+        if(df[column].dtype == "object" or df[column].dtype == "string"):
+            imputed_dataframe[[column]] = imputed_dataframe[[column]].astype(int)
+            decodedData = encoders[column].inverse_transform(imputed_dataframe[[column]])
+            imputed_dataframe[column] = decodedData.ravel('C').tolist()
         df[[column]] = imputed_dataframe[[column]]
         dataframeHandler.saveDataframe(df)
 
