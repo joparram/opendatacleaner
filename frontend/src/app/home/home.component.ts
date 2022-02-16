@@ -16,7 +16,7 @@ import { DataService } from '@app/@shared/services/data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ActionComponent } from '@app/@shared/models/action-component';
 import { ActionDialogComponent } from '@shared/components/component-dialog/action-dialog.component';
-import { EXCallbackDatasource, EXDatasourceParams, EXTableDatasource } from '@app/ex-datatable/models/table-data';
+import { EXDatasourceParams, EXTableDatasource } from '@app/ex-datatable/models/table-data';
 
 @Component({
   selector: 'app-home',
