@@ -56,3 +56,12 @@ class TransformPlugin:
     actions: [Action]
     handler_class: Callable[..., Callable[[None], None]]
     id: str = uuid.uuid4().hex
+
+@dataclass
+class VisualizationPlugin:
+    name: str
+    description: str
+    interfacename: str
+    actions: [Action]
+    handler_class: Callable[..., Callable[[None], None]]
+    id: str = uuid.uuid4().hex

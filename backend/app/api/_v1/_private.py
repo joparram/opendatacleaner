@@ -1,8 +1,8 @@
 import sys
 from typing import Any, Type
-from ...plugin import ExporterPlugin, ImporterPlugin, ProcessorPlugin, DatabaseExporterPlugin, DataPlugin, TransformPlugin
+from ...plugin import ExporterPlugin, ImporterPlugin, ProcessorPlugin, DatabaseExporterPlugin, DataPlugin, TransformPlugin, VisualizationPlugin
 from ...component import Component
-from ...components._plugins import ImporterPlugins, ExporterPlugins, DatabaseExporterPlugins, ProcessorPlugins, DataPlugins, TransformPlugins
+from ...components._plugins import ImporterPlugins, ExporterPlugins, DatabaseExporterPlugins, ProcessorPlugins, DataPlugins, TransformPlugins, VisualizationPlugins
 from ...components._components import Components
 import cargo
 
@@ -14,6 +14,7 @@ def create_container():
     _container[ProcessorPlugins] = []
     _container[DataPlugins] = []
     _container[TransformPlugins] = []
+    _container[VisualizationPlugins] = []
     _container[Components] = []
     return _container
 
@@ -39,6 +40,10 @@ def register_database_exporter_plugin(plugin: DatabaseExporterPlugin):
 
 def register_data_plugin(plugin: DataPlugin):
     container[DataPlugins].append(plugin)
+    container[plugin.handler_class] = plugin.handler_class
+
+def register_visualization_plugin(plugin: VisualizationPlugin):
+    container[VisualizationPlugins].append(plugin)
     container[plugin.handler_class] = plugin.handler_class
 
 def unregister_transform_plugin(pluginName):
@@ -87,6 +92,13 @@ def unregister_data_plugin(pluginName):
             print("unregister data plugin: "+pluginName)
             break
 
+def unregister_visualization_plugin(pluginName):
+    for i in container[VisualizationPlugins]:
+        if i.name == pluginName:
+            container[VisualizationPlugins].remove(i)
+            print("unregister data plugin: "+pluginName)
+            break
+
 def get_importer_plugins():
     return container[ImporterPlugins]
 def get_exporter_plugins():
@@ -97,6 +109,10 @@ def get_database_exporter_plugins():
     return container[DatabaseExporterPlugins]
 def get_data_plugins():
     return container[DataPlugins]
+def get_transform_plugins():
+    return container[TransformPlugins]
+def get_visualization_plugins():
+    return container[VisualizationPlugins]
 
 def register_component(component: Component):
     print("registro de componente: "+component.name)
