@@ -12,6 +12,7 @@ import { CoreModule } from '@core';
 import { SharedModule } from '@shared';
 import { HomeModule } from './home/home.module';
 import {PluginmanagerModule } from './pluginmanager/pluginmanager.module';
+import {VisualizationModule } from './visualization/visualization.module';
 import { ShellModule } from './shell/shell.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -31,6 +32,7 @@ import { AppRoutingModule } from './app-routing.module';
     HomeModule,
     AppRoutingModule,
     PluginmanagerModule,
+    VisualizationModule
   ],
   declarations: [AppComponent],
   providers: [],

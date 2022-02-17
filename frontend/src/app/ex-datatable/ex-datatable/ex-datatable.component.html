@@ -6,7 +6,7 @@
         <thead>
           <tr >
             <th *ngFor="let header of headers; let i = index">
-              <button class="header-button"><span>{{ header.headerName }}</span><span>{{header?.subtitle}}</span></button>
+              <button class="header-button"><span>{{ header.headerName }}</span><span>{{header?.subtitle}} alias:c{{i + 1}}</span></button>
               <dropdown-button [columnid]="header.field" [menuItems]="menuItems" class="header-menu-button"></dropdown-button>
             </th>
           </tr>
