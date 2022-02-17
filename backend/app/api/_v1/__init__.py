@@ -1,4 +1,4 @@
-from ...plugin import ImporterPlugin, ExporterPlugin, ProcessorPlugin, DatabaseExporterPlugin
+from ...plugin import ImporterPlugin, ExporterPlugin, ProcessorPlugin, DatabaseExporterPlugin, VisualizationPlugin, TransformPlugin
 from ...component import Component
 from ...action import Action, Param
 from ._private import (
