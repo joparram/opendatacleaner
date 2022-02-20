@@ -18,3 +18,4 @@ scipy==1.6.0
 scikit-learn==0.24.1
 matplotlib==3.3.4
 pymongo==3.11.3
+itsdangerous==2.0.1

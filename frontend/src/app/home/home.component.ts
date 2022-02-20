@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   maxRow: number = 50;
   dataSubscription: Subscription = new Subscription();
   datasource: EXTableDatasource;
+  logs = ["logs"];
   gridEvents: EXTableEvents;
   contextmenuItems: any[] = [
     {

@@ -52,7 +52,7 @@ class Exporter:
 
         filename = request.form.get('filename')
         filebuffer = StringIO()
-        df.to_csv(filebuffer)
+        df.to_csv(filebuffer, index=False)
         filemem = BytesIO()
         filemem.write(filebuffer.getvalue().encode())
         filemem.seek(0)
