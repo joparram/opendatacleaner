@@ -10,6 +10,7 @@ import { ImportService } from '@shared/services/import.service';
 import { ImportDialogComponent } from './import-dialog/import-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ExDatatableModule } from '@app/ex-datatable/ex-datatable.module';
+import { ExLoggerModule } from '@app/ex-logger/ex-logger.module';
 @NgModule({
   imports: [
     CommonModule,
@@ -21,6 +22,7 @@ import { ExDatatableModule } from '@app/ex-datatable/ex-datatable.module';
     FormsModule,
     ReactiveFormsModule,
     ExDatatableModule,
+    ExLoggerModule,
   ],
   declarations: [HomeComponent, ImportDialogComponent],
   providers: [ImportService],

@@ -3,25 +3,25 @@
     <mat-list class="action-list">
       <div mat-subheader>Avanzado</div>
       <mat-list-item (click)="click({ action: 'data' })">
-        <mat-icon mat-list-icon>build_circle</mat-icon>
+        <mat-icon mat-list-icon>edit</mat-icon>
         <div mat-line>Manipulación</div>
         <div mat-line>Fila: {{ selectedRow }}</div>
         <div mat-line>Columna: {{ selectedColumn | slice: 0:8 }}</div>
       </mat-list-item>
       <mat-list-item (click)="click({ action: 'process' })">
-        <mat-icon mat-list-icon>build_circle</mat-icon>
-        <div mat-line>Procesar</div>
+        <mat-icon mat-list-icon>clear_all</mat-icon>
+        <div mat-line>Limpieza</div>
         <div mat-line>Fila: {{ selectedRow }}</div>
         <div mat-line>Columna: {{ selectedColumn | slice: 0:8 }}</div>
       </mat-list-item>
       <mat-list-item (click)="click({ action: 'transform' })">
-        <mat-icon mat-list-icon>build_circle</mat-icon>
-        <div mat-line>Transformar</div>
+        <mat-icon mat-list-icon>transform</mat-icon>
+        <div mat-line>Transformación</div>
         <div mat-line>Fila: {{ selectedRow }}</div>
         <div mat-line>Columna: {{ selectedColumn | slice: 0:8 }}</div>
       </mat-list-item>
       <mat-list-item (click)="click({ action: 'databaseexporter' })">
-        <mat-icon mat-list-icon>build_circle</mat-icon>
+        <mat-icon mat-list-icon>call_made</mat-icon>
         <div mat-line>Exportar a BD</div>
       </mat-list-item>
     </mat-list>
@@ -30,45 +30,12 @@
   <div class="sugestions">
     <mat-tab-group>
       <mat-tab label="Logs">
-        <mat-list>
-          <mat-list-item *ngFor="let log of logs">
-            <mat-icon mat-list-icon>info</mat-icon>
-            <div mat-line>{{ log }}</div>
-          </mat-list-item>
-        </mat-list>
+        <logger #logger></logger>
       </mat-tab>
-      <!-- <mat-tab label="Sugerencias">
-        <div style="display: flex; flex-direction: row; height: 100%; width: 100%">
-          <div
-            color="primary"
-            style="
-              display: flex;
-              flex-direction: row;
-              height: 100%;
-              width: 100%;
-              align-items: center;
-              padding-left: 32px;
-            "
-            class="sugestions-actions"
-          >
-            <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">Fila: eliminar</button>
-            <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">Fila: rellenar</button>
-            <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">
-              Columna: eliminar outliers
-            </button>
-            <button mat-raised-button style="height: 40px; min-width: 172px" color="accent">
-              Columna: eliminar outliers
-            </button>
-          </div>
-        </div>
-      </mat-tab>
-      <mat-tab label="Histórico"> Content 3 </mat-tab>
-      <mat-tab label="Resultados"> Content 3 </mat-tab> -->
     </mat-tab-group>
   </div>
 
   <div class="dataset">
-
     <ex-datatable
       (onTableInit)="onInitTable($event)"
       [events]="gridEvents"
@@ -76,6 +43,5 @@
       [contextmenuItems]="contextmenuItems"
       style="width: 100%; height: 100%"
     ></ex-datatable>
-
   </div>
 </div>

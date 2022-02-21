@@ -29,7 +29,7 @@ export class ExPaginatorComponent implements OnInit {
       if (this.datasourceParams) {
         this.datasourceParams.page = page;
         this.datasourceParams.lastRow = this.datasourceParams.page * this.datasourceParams.pageRows;
-        this.datasourceParams.firstRow = (this.datasourceParams.page - 1) * this.datasourceParams.pageRows + 1;
+        this.datasourceParams.firstRow = (this.datasourceParams.page - 1) * this.datasourceParams.pageRows;
         this.datasourceParamsChange.emit(this.datasourceParams);
       }
     });

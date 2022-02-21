@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { Header } from '../models/header';
 import { EXDatasourceParams, EXTableDatasource } from '../models/table-data';
-import { EXTableEvents, Cell} from '../models/table-events';
+import { EXTableEvents, Cell } from '../models/table-events';
 
 export enum KEY_CODE {
   ENTER = 'Enter',
@@ -26,7 +26,6 @@ export enum KEY_CODE {
 export class ExDatatableComponent implements OnInit, OnChanges {
   cellStyle: string = 'ex-cell-default';
 
-
   @Output() onTableInit: EventEmitter<EXDatasourceParams> = new EventEmitter<EXDatasourceParams>();
 
   datasourceParams: EXDatasourceParams = {
@@ -35,7 +34,7 @@ export class ExDatatableComponent implements OnInit, OnChanges {
     firstRow: 1,
     lastRow: 50,
     readyData: this.fillTable.bind(this),
-    setDatasource: this.setDatasource.bind(this)
+    setDatasource: this.setDatasource.bind(this),
   };
 
   @Input()
@@ -72,7 +71,7 @@ export class ExDatatableComponent implements OnInit, OnChanges {
     this.ref.detectChanges();
   }
 
-  onCellFocus(cell : Cell) {
+  onCellFocus(cell: Cell) {
     if (this.events?.onFocusCell) {
       this.events?.onFocusCell(cell);
     }
@@ -86,10 +85,9 @@ export class ExDatatableComponent implements OnInit, OnChanges {
     this.cellStyle = 'ex-cell-default';
   }
 
-  onCellChanges(cell : Cell) {
+  onCellChanges(cell: Cell) {
     this.events?.onEditCell(cell);
   }
-
 
   onPagination() {
     setTimeout(() => {
@@ -97,13 +95,13 @@ export class ExDatatableComponent implements OnInit, OnChanges {
     }, 0);
   }
 
-  buildCellFromEvent(value: any, x: number,  y: number) {
+  buildCellFromEvent(value: any, x: number, y: number) {
     const cell: Cell = {
       columnName: this.headers[y].field,
       value: value,
-      x: x + ((this.datasourceParams.page - 1) * this.datasourceParams.pageRows) + 1,
+      x: x + (this.datasourceParams.page - 1) * this.datasourceParams.pageRows,
       y: y,
-    }
+    };
     return cell;
   }
 
@@ -117,5 +115,4 @@ export class ExDatatableComponent implements OnInit, OnChanges {
       }
     }
   }
-
 }
