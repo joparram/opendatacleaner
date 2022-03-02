@@ -5,11 +5,12 @@ import uuid
 
 @dataclass
 class Param:
-    kind: Literal['file', 'string', 'number', 'boolean', 'select']
+    kind: Literal['file', 'string', 'number', 'boolean', 'select', 'multiSelect']
     name: str
     description: str = ""
     default: str = None
     options: [str] = None
+    optionsAreColumns: bool = False
     required: bool = True
     id: str = uuid.uuid4().hex
 

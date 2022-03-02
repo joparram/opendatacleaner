@@ -19,7 +19,9 @@ from app.controllers.components import ComponentesController
 from app.controllers.data import DataController
 from app.controllers.paginated_data import PaginatedDataController
 from app.controllers.plugin_manager import PluginManagerController
+from app.controllers.transform import TransformController
 from app.error import Error
+from app.controllers.visualization import VisualizationController
 
 app = Flask(__name__)
 api = Api(app)
@@ -41,6 +43,9 @@ api.add_resource(DatabaseExporterController, '/database_exporter')  # Route_1
 api.add_resource(ExporterController, '/exporter')  # Route_1
 api.add_resource(DataController, '/data')  # Route_1
 api.add_resource(PluginManagerController, '/plugin_manager')  # Route_1
+api.add_resource(TransformController, '/transform')  # Route_1
+api.add_resource(VisualizationController, '/visualization')  # Route_1
+
 
 @app.errorhandler(Error)
 def handle_bad_request(error):

@@ -57,7 +57,8 @@ class Data:
         }
         self.typesHandlers = {
             "float64": self.setTypeFloatHandler,
-            "int64": self.setTypeIntHandler
+            "int64": self.setTypeIntHandler,
+            "str": self.setTypeStringHandler
         }
         self.pagination = {
             "startRow": None,
@@ -81,7 +82,7 @@ class Data:
             df = dataframeHandler.getDataframe()
             df[[column]] = df[[column]].astype(_type)
             dataframeHandler.saveDataframe(df)
-
+        print("finaliza setTypeHandler")
     def deleteRowHandler(self, request):
         row = int(request.form.get('row'))
         df = dataframeHandler.getDataframe()
@@ -97,14 +98,24 @@ class Data:
 
     def setTypeFloatHandler(self, request):
         column = request.form.get('column')
+        print('Column: ', column)
         df = dataframeHandler.getDataframe()
         df[column] = pd.to_numeric(df[column], errors='coerce')
         dataframeHandler.saveDataframe(df)
 
+    def setTypeStringHandler(self, request):
+        column = request.form.get('column')
+        print('Column: ', column)
+        df = dataframeHandler.getDataframe()
+        df[column] = df[column].astype('string')
+        dataframeHandler.saveDataframe(df)
+
     def setTypeIntHandler(self, request):
         column = request.form.get('column')
+        print("setTypeIntHandler")
         df = dataframeHandler.getDataframe()
-        df[column] = pd.to_numeric(df[column], errors='coerce')
+        df[column] = np.floor(pd.to_numeric(df[column], errors='coerce'))
+        df[column] = df[column].astype('Int64')
         dataframeHandler.saveDataframe(df)
 
     def closeProjectHandler(self, request):
@@ -132,6 +143,7 @@ class Data:
             raise Error('Accion {} desconocida'.format(action))
         else:
             self.actions[action](request)
+        print("sale setTypeHandler")
         return dataframeHandler.getAllData(self.pagination)
 
 # component registration in the internal api

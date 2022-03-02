@@ -1,0 +1,16 @@
+<div class="grid-container">
+  <div class="actions">
+    <mat-list class="action-list">
+      <div mat-subheader>Acciones</div>
+      <mat-list-item  (click)="visualization()">
+        <mat-icon mat-list-icon>cloud_upload</mat-icon>
+        <div mat-line >Visualizar</div>
+      </mat-list-item>
+    </mat-list>
+    <mat-divider></mat-divider>
+  </div>
+  <div class="dataset">
+      <img [src]="plot">
+  </div>
+</div>
+
