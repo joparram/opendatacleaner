@@ -1,0 +1,9 @@
+<div fxFlexFill id="container">
+  <div
+    *ngFor="let log of logs"
+    mat-line
+    [ngClass]="{ warning: log.type === 'warning', error: log.type === 'error', info: log.type === 'info' }"
+  >
+    {{ log.date }} {{ log.type | titlecase }}: {{ log.message }}
+  </div>
+</div>

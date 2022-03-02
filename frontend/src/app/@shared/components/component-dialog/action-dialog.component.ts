@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectorRef,
-  ViewChildren,
-  QueryList,
-  ElementRef,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ActionComponent } from '../../models/action-component';
@@ -36,7 +29,10 @@ export class ActionDialogComponent implements OnInit {
     this.action = this.component.actions[0];
     this.createParametersForm();
   }
-
+  onPluginChange() {
+    this.parameters = this.fb.group({});
+    this.action = this.getActions()[0];
+  }
   getFormData() {
     let params = this.parameters.getRawValue();
     params.action = this.action.name;

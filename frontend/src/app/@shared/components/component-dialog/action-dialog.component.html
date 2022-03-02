@@ -1,7 +1,7 @@
 <h1 matDialogTitle>{{ component.name }}</h1>
 <h4>Seleccionar plugin</h4>
 
-<mat-radio-group [(ngModel)]="plugin" (change)="onChanges()">
+<mat-radio-group [(ngModel)]="plugin" (change)="onPluginChange(); onChanges()">
   <mat-radio-button class="example-radio-button" value="none"> Ninguno </mat-radio-button>
   <mat-radio-button class="example-radio-button" *ngFor="let plugin of component.plugins" [value]="plugin">
     {{ plugin.name }}
@@ -10,7 +10,7 @@
 
 <h4>Seleccionar acción</h4>
 
-<mat-radio-group [(ngModel)]="action" (change)="onChanges()">
+<mat-radio-group id="actions" [(ngModel)]="action" (change)="onChanges()">
   <mat-radio-button
     #actions
     class="example-radio-button"

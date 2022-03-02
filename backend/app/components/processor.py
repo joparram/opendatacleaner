@@ -6,6 +6,7 @@ from app.components._data import dataframeHandler
 import numpy as np
 from sklearn.impute import KNNImputer
 from sklearn import preprocessing
+from scipy.stats import zscore
 
 # id del componente
 componentId = "processor"
@@ -20,7 +21,6 @@ Actions = [_v1.Action(
                       name="averageImputing",
                       description="Imputación de datos faltantes en base a la media de la columna",
                       params=[
-                        _v1.Param(name="axis", kind="number"),
                       ]),
             _v1.Action(
                       name="mostFrecuencyImputing",
@@ -34,13 +34,22 @@ Actions = [_v1.Action(
                       params=[
                         _v1.Param(name="method", kind="select", options=["polynomial", 'linear', 'time', 'index', 'values', 'nearest', 'zero', 'slinear', 'quadratic', 'cubic', 'barycentric', 'krogh', 'spline']),
                         _v1.Param(name="order", kind="number"),
-                        _v1.Param(name="axis", kind="number"),
                       ]),
             _v1.Action(
                       name="kNearestNeighborsImputing",
                       description="Imputación de datos faltantes por vecindad",
                       params=[
                         _v1.Param(name="n_neighbors", kind="number"),
+                      ]),
+            _v1.Action(
+                      name="interquartileOutlierRemoval",
+                      description="Eliminar datos datos atípicos usando el rango de intercuartiles",
+                      params=[
+                      ]),
+            _v1.Action(
+                      name="zscoreOutlierRemoval",
+                      description="Eliminar datos datos atípicos usando el zscore",
+                      params=[
                       ])
           ]
 ## Component processor
@@ -53,7 +62,9 @@ class Processor:
             "averageImputing": self.averageImputingHandler,
             "mostFrecuencyImputing": self.mostFrecuencyImputingHandler,
             "interpolationImputing": self.interpolationImputingHandler,
-            "kNearestNeighborsImputing": self.kNearestNeighborsImputingHandler
+            "kNearestNeighborsImputing": self.kNearestNeighborsImputingHandler,
+            "interquartileOutlierRemoval": self.interquartileOutlierRemovalHandler,
+            "zscoreOutlierRemoval": self.zscoreOutlierRemovalHandler
         }
         self.pagination = {
             "startRow": None,
@@ -74,10 +85,8 @@ class Processor:
     def averageImputingHandler(self, request):
         df = dataframeHandler.getDataframe()
         column = request.form.get('column')
-        axis = request.form.get('axis')
-        print("axis: ", axis)
         print("column: ", column)
-        df[[column]] = df[[column]].fillna(df.mean(axis=int(axis)))
+        df[[column]] = df[[column]].fillna(df.mean(axis=0))
         pd.set_option("max_columns", None) # show all cols
         dataframeHandler.saveDataframe(df)
 
@@ -89,14 +98,40 @@ class Processor:
         pd.set_option("max_columns", None) # show all cols
         dataframeHandler.saveDataframe(df)
 
+    def interquartileOutlierRemovalHandler(self, request):
+        print("interquartileOutlierRemovalHandler")
+        df = dataframeHandler.getDataframe()
+        column = request.form.get('column')
+        Q1 = df[[column]].quantile(0.25)
+        Q3 = df[[column]].quantile(0.75)
+        IQR = Q3 - Q1
+        print("IQR: ", IQR)
+        print("Q1: ", Q1)
+        print("Q3: ", Q3)
+        pd.set_option("max_columns", None) # show all cols
+        df = df[~((df[[column]] < (Q1 - 1.5 * IQR)) | (df[[column]] > (Q3 + 1.5 * IQR))).any(axis=1)]
+        df.reset_index(drop=True, inplace=True)
+        dataframeHandler.saveDataframe(df)
+
+
+    def zscoreOutlierRemovalHandler(self, request):
+        print("zscoreOutlierRemovalHandler")
+        df = dataframeHandler.getDataframe()
+        column = request.form.get('column')
+        pd.set_option("max_columns", None) # show all cols
+        print(zscore(df[[column]]))
+        df = df[~((df[[column]] < (df[[column]].mean() - 3 * df[[column]].std())) | (df[[column]] > (df[[column]].mean() + 3 * df[[column]].std()))).any(axis=1)]
+        df.reset_index(drop=True, inplace=True)
+        dataframeHandler.saveDataframe(df)
+
     def interpolationImputingHandler(self, request):
         df = dataframeHandler.getDataframe()
         column = request.form.get('column')
         method = request.form.get('method')
         order = request.form.get('order')
-        axis = request.form.get('axis')
         # df = df.interpolate(method='polynomial', order=2, axis=0)
-        df[[column]] = df[[column]].interpolate(method=method, order=int(order), axis=int(axis))
+        df[[column]] = df[[column]].interpolate(method=method, order=int(order), axis=0)
+        print(df)
         pd.set_option("max_columns", None) # show all cols
         dataframeHandler.saveDataframe(df)
 
