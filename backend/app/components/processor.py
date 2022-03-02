@@ -21,7 +21,6 @@ Actions = [_v1.Action(
                       name="averageImputing",
                       description="Imputación de datos faltantes en base a la media de la columna",
                       params=[
-                        _v1.Param(name="axis", kind="number"),
                       ]),
             _v1.Action(
                       name="mostFrecuencyImputing",
@@ -35,7 +34,6 @@ Actions = [_v1.Action(
                       params=[
                         _v1.Param(name="method", kind="select", options=["polynomial", 'linear', 'time', 'index', 'values', 'nearest', 'zero', 'slinear', 'quadratic', 'cubic', 'barycentric', 'krogh', 'spline']),
                         _v1.Param(name="order", kind="number"),
-                        _v1.Param(name="axis", kind="number"),
                       ]),
             _v1.Action(
                       name="kNearestNeighborsImputing",
@@ -87,10 +85,8 @@ class Processor:
     def averageImputingHandler(self, request):
         df = dataframeHandler.getDataframe()
         column = request.form.get('column')
-        axis = request.form.get('axis')
-        print("axis: ", axis)
         print("column: ", column)
-        df[[column]] = df[[column]].fillna(df.mean(axis=int(axis)))
+        df[[column]] = df[[column]].fillna(df.mean(axis=0))
         pd.set_option("max_columns", None) # show all cols
         dataframeHandler.saveDataframe(df)
 
@@ -109,6 +105,9 @@ class Processor:
         Q1 = df[[column]].quantile(0.25)
         Q3 = df[[column]].quantile(0.75)
         IQR = Q3 - Q1
+        print("IQR: ", IQR)
+        print("Q1: ", Q1)
+        print("Q3: ", Q3)
         pd.set_option("max_columns", None) # show all cols
         df = df[~((df[[column]] < (Q1 - 1.5 * IQR)) | (df[[column]] > (Q3 + 1.5 * IQR))).any(axis=1)]
         df.reset_index(drop=True, inplace=True)
@@ -130,9 +129,8 @@ class Processor:
         column = request.form.get('column')
         method = request.form.get('method')
         order = request.form.get('order')
-        axis = request.form.get('axis')
         # df = df.interpolate(method='polynomial', order=2, axis=0)
-        df[[column]] = df[[column]].interpolate(method=method, order=int(order), axis=int(axis))
+        df[[column]] = df[[column]].interpolate(method=method, order=int(order), axis=0)
         print(df)
         pd.set_option("max_columns", None) # show all cols
         dataframeHandler.saveDataframe(df)
